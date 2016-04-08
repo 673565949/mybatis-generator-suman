@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+<!-- 数据库驱动 -->
+	 <classPathEntry	location="libs/mysql-connector-java-5.1.5-bin.jar"/>
+	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="flat">
+		<property name="autoDelimitKeywords" value="true"/>
+		<property name="beginningDelimiter" value="`"/>
+		<property name="endingDelimiter" value="`"/>
+		<commentGenerator>
+			<property name="suppressDate" value="true"/>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true"/>
+		</commentGenerator>
+		<!--数据库链接URL，用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/project" userId="root" password="1234">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false"/>
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置-->
+		<javaModelGenerator targetPackage="com.perfect.trains.model" targetProject="E://workspace/project_extjs4.2_suman/src">
+			<property name="enableSubPackages" value="true"/>
+			<property name="trimStrings" value="true"/>
+			<property name="rootClass" value="com.perfect.trains.base.BaseModel"/>
+		</javaModelGenerator>
+		<!-- 生成映射文件的包名和位置-->
+		<sqlMapGenerator targetPackage="com.perfect.trains.mapping" targetProject="E://workspace/project_extjs4.2_suman/src">
+			<property name="enableSubPackages" value="true"/>
+		</sqlMapGenerator>
+		<!-- 生成DAO的包名和位置-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.perfect.trains.mapper" targetProject="E://workspace/project_extjs4.2_suman/src" >
+			<property name="enableSubPackages" value="true"/>
+			<property name="rootInterface" value="com.perfect.trains.base.BaseMapper"/>
+		</javaClientGenerator>
+		<!-- 要生成哪些表-->
+
+		<table tableName="module" alias="module" domainObjectName="Module">
+			<generatedKey column="id" sqlStatement="JDBC"/>
+			 <columnOverride column="leaf" javaType="java.lang.Integer" ></columnOverride>
+			 <columnOverride column="sort_index" javaType="java.lang.Integer" ></columnOverride>
+		</table>
+		<table tableName="role" alias="role" domainObjectName="Role">
+			 <generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="role_module" alias="role_module" domainObjectName="RoleModule">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="user" alias="sys_user" domainObjectName="User" >
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="user_rolegroup" alias="user_roleGroup" domainObjectName="UserRoleGroup">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="rolegroup" alias="rolegroup" domainObjectName="RoleGroup">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+			 <columnOverride column="leaf" javaType="java.lang.Integer" ></columnOverride>
+			 <columnOverride column="sort_index" javaType="java.lang.Integer" ></columnOverride>
+		</table>
+				
+		<table tableName="role_rolegroup" alias="role_rolegroup" domainObjectName="RoleRoleGroup">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="menu" alias="menu" domainObjectName="Menu">
+		  	<generatedKey column="id" sqlStatement="JDBC"/>
+			 <columnOverride column="leaf" javaType="java.lang.Integer" ></columnOverride>
+			 <columnOverride column="sort_index" javaType="java.lang.Integer" ></columnOverride>
+		</table>
+		<table tableName="department" alias="department" domainObjectName="Department">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+			 <columnOverride column="leaf" javaType="java.lang.Integer" ></columnOverride>
+			 <columnOverride column="sort_index" javaType="java.lang.Integer" ></columnOverride>
+		</table>
+		<table tableName="dic_type" alias="dicType" domainObjectName="DicType">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="dic_data" alias="dicData" domainObjectName="DicData">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="log" alias="log" domainObjectName="SysLog">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="manufacturer" alias="manufacturer" domainObjectName="Manufacturer">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="train" alias="train" domainObjectName="Train">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="train_equipment" alias="trainEquipment" domainObjectName="TrainEquipment">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="train_model" alias="trainModel" domainObjectName="TrainModel">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="parameter" alias="parameter" domainObjectName="Parameter">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="equipment_classification" alias="equipmentClassification" domainObjectName="EquipmentClassification">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>		
+		<table tableName="trainModel_equipmentClassification" alias="trainModelEquipmentClassification" domainObjectName="TrainModelEquipmentClassification">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>	
+		<table tableName="equipment_model" alias="equipmentModel" domainObjectName="EquipmentModel">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>	
+		<table tableName="equipment" alias="equipment" domainObjectName="Equipment">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="classification_manufacturer" alias="classificationManufacturer" domainObjectName="ClassificationManufacturer">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		
+		<table tableName="train_repairrecord" alias="trainRepairRecord" domainObjectName="TrainRepairRecord">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="equipment_repairrecord" alias="equipmentRepairRecord" domainObjectName="EquipmentRepairRecord">
+		 	<generatedKey column="id" sqlStatement="JDBC"/>
+		</table>
+		
+				
+	</context>
+	
+	
+</generatorConfiguration>
