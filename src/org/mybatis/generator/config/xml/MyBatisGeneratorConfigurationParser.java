@@ -147,14 +147,14 @@ public class MyBatisGeneratorConfigurationParser {
 	private void parseContext(Configuration configuration, Node node) {
 
 		Properties attributes = parseAttributes(node);
-		String defaultModelType = attributes.getProperty("defaultModelType"); //得到defaultModelType属性
-		String targetRuntime = attributes.getProperty("targetRuntime"); //得到targetRuntime属性
+		String defaultModelType = attributes.getProperty("defaultModelType"); //得到defaultModelType(默认的model类 类型)属性
+		String targetRuntime = attributes.getProperty("targetRuntime"); //得到targetRuntime(运行环境)属性
 		String introspectedColumnImpl = attributes.getProperty("introspectedColumnImpl"); //得到introspectedColumnImpl属性
 		String id = attributes.getProperty("id"); //得到id属性
 
 		ModelType mt = defaultModelType == null ? null : ModelType.getModelType(defaultModelType);// 得到modelType
 
-		Context context = new Context(mt);// 得到context对象
+		Context context = new Context(mt);// 创建context对象
 		context.setId(id);
 		if (stringHasValue(introspectedColumnImpl)) {
 			context.setIntrospectedColumnImpl(introspectedColumnImpl);
@@ -212,8 +212,8 @@ public class MyBatisGeneratorConfigurationParser {
 		context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
 		Properties attributes = parseAttributes(node);
-		String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
-		String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+		String targetPackage = attributes.getProperty("targetPackage"); //目标包
+		String targetProject = attributes.getProperty("targetProject"); //目标项目
 
 		sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
 		sqlMapGeneratorConfiguration.setTargetProject(targetProject);
@@ -330,7 +330,7 @@ public class MyBatisGeneratorConfigurationParser {
 		}
 
 		if (stringHasValue(delimitAllColumns)) {//是否分隔全部的列
-			tc.setAllColumnDelimitingEnabled(isTrue(delimitAllColumns));//设置分隔
+			tc.setAllColumnDelimitingEnabled(isTrue(delimitAllColumns));
 		}
 
 		NodeList nodeList = node.getChildNodes();
@@ -543,7 +543,7 @@ public class MyBatisGeneratorConfigurationParser {
 		javaClientGeneratorConfiguration.setConfigurationType(type);
 		javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
 		javaClientGeneratorConfiguration.setTargetProject(targetProject);
-		javaClientGeneratorConfiguration.setImplementationPackage(implementationPackage);
+		javaClientGeneratorConfiguration.setImplementationPackage(implementationPackage);//实现包
 
 		NodeList nodeList = node.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -569,10 +569,10 @@ public class MyBatisGeneratorConfigurationParser {
 		context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
 
 		Properties attributes = parseAttributes(node);
-		String driverClass = attributes.getProperty("driverClass"); //
-		String connectionURL = attributes.getProperty("connectionURL"); //$NON-NLS-1$
-		String userId = attributes.getProperty("userId"); //$NON-NLS-1$
-		String password = attributes.getProperty("password"); //$NON-NLS-1$
+		String driverClass = attributes.getProperty("driverClass"); //jdbc 连接class名
+		String connectionURL = attributes.getProperty("connectionURL"); //jdbc连接路径
+		String userId = attributes.getProperty("userId"); //jdbc连接用户名
+		String password = attributes.getProperty("password"); //密码
 
 		jdbcConnectionConfiguration.setDriverClass(driverClass);
 		jdbcConnectionConfiguration.setConnectionURL(connectionURL);
@@ -659,11 +659,11 @@ public class MyBatisGeneratorConfigurationParser {
 		return newString;
 	}
 	/**
-	 * 解析注释生成配置
-	 * <!-- 是否去除自动生成的时间戳注释：是 ： false:否 -->
-	 * <property name="suppressDate" value="true"/>
-	 *<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
-	 *<property name="suppressAllComments" value="true"/>
+	 * 解析注释生成配置<br/>
+	 * 是否去除自动生成的时间戳注释：是 ： false:否 <br/>
+	 * "<"property name="suppressDate" value="true"/">""<br/>
+	 *是否去除自动生成的注释 true：是 ： false:否 <br/>
+	 *"<"property name="suppressAllComments" value="true"/">"<br/>
 	 * @param context
 	 * @param node
 	 */
@@ -676,7 +676,7 @@ public class MyBatisGeneratorConfigurationParser {
 		String type = attributes.getProperty("type"); //$NON-NLS-1$
 
 		if (stringHasValue(type)) {
-			commentGeneratorConfiguration.setConfigurationType(type);
+			commentGeneratorConfiguration.setConfigurationType(type);//设置注释生成配置类型
 		}
 
 		NodeList nodeList = node.getChildNodes();
@@ -687,8 +687,8 @@ public class MyBatisGeneratorConfigurationParser {
 				continue;
 			}
 
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(commentGeneratorConfiguration, childNode);
+			if ("property".equals(childNode.getNodeName())) { //如果是property属性
+				parseProperty(commentGeneratorConfiguration, childNode);//解析property类型
 			}
 		}
 	}

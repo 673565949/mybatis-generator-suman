@@ -193,16 +193,16 @@ public class MyBatisGenerator {
 			callback = new NullProgressCallback();
 		}
 
-		generatedJavaFiles.clear();//生成java文件
-		generatedXmlFiles.clear();//生成的xml文件
+		generatedJavaFiles.clear();//生成java文件清空
+		generatedXmlFiles.clear();//生成的xml文件清空
 
 		// calculate the contexts to run
 		List<Context> contextsToRun;
-		if (contextIds == null || contextIds.size() == 0) {
+		if (contextIds == null || contextIds.size() == 0) {//如果参数读不出来 那么获取配置文件里的全部context
 			contextsToRun = configuration.getContexts();
 		} else {
 			contextsToRun = new ArrayList<Context>();
-			for (Context context : configuration.getContexts()) {
+			for (Context context : configuration.getContexts()) {//否则使用指定的context
 				if (contextIds.contains(context.getId())) {
 					contextsToRun.add(context);
 				}
@@ -218,7 +218,7 @@ public class MyBatisGenerator {
 		// now run the introspections...
 		int totalSteps = 0;
 		for (Context context : contextsToRun) {
-			totalSteps += context.getIntrospectionSteps();// 总步数
+			totalSteps += context.getIntrospectionSteps();// 总步数 连接数据库一步 每个表一步
 		}
 		callback.introspectionStarted(totalSteps);// 设置总步数
 
@@ -229,7 +229,7 @@ public class MyBatisGenerator {
 		// now run the generates
 		totalSteps = 0;
 		for (Context context : contextsToRun) {
-			totalSteps += context.getGenerationSteps();
+			totalSteps += context.getGenerationSteps();//怀疑这步存在bug 根本获取不到东西  
 		}
 		callback.generationStarted(totalSteps);
 

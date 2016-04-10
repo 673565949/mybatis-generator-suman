@@ -619,16 +619,16 @@ public class Context extends PropertyHolder {
 
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
 
-            for (TableConfiguration tc : tableConfigurations) {
+            for (TableConfiguration tc : tableConfigurations) {//遍历表对象
                 String tableName = composeFullyQualifiedTableName(tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
-
-                if (fullyQualifiedTableNames != null&& fullyQualifiedTableNames.size() > 0) {
+                //拼接完整表明 catalog.schema.tableName
+                if (fullyQualifiedTableNames != null&& fullyQualifiedTableNames.size() > 0) {//参数可以设置表名，如果设置了且不包含这个表名 跳过
                     if (!fullyQualifiedTableNames.contains(tableName)) {
                         continue;
                     }
                 }
 
-                if (!tc.areAnyStatementsEnabled()) {
+                if (!tc.areAnyStatementsEnabled()) {//如果不需要生成任何查询语句
                     warnings.add(getString("Warning.0", tableName)); //$NON-NLS-1$
                     continue;
                 }
@@ -683,7 +683,7 @@ public class Context extends PropertyHolder {
             List<GeneratedXmlFile> generatedXmlFiles, List<String> warnings)
             throws InterruptedException {
 
-        pluginAggregator = new PluginAggregator();
+        pluginAggregator = new PluginAggregator();//插件整合器
         for (PluginConfiguration pluginConfiguration : pluginConfigurations) {
             Plugin plugin = ObjectFactory.createPlugin(this,pluginConfiguration);
             if (plugin.validate(warnings)) {
