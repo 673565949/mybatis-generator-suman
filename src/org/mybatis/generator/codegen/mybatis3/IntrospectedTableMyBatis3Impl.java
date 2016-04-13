@@ -38,6 +38,7 @@ import org.mybatis.generator.codegen.mybatis3.model.RecordWithBLOBsGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.internal.ObjectFactory;
+import static org.mybatis.generator.internal.util.StringUtility.isTrue;
 
 /**
  * The Class IntrospectedTableMyBatis3Impl.
@@ -269,7 +270,9 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
             GeneratedXmlFile gxf = new GeneratedXmlFile(document,
                 getMyBatis3XmlMapperFileName(), getMyBatis3XmlMapperPackage(),
                 context.getSqlMapGeneratorConfiguration().getTargetProject(),
-                true, context.getXmlFormatter());
+                isTrue(context.getProperty(PropertyRegistry.CONTEXT_XML_MREGEABLE)), context.getXmlFormatter());// change by suman  new
+                /*true, context.getXmlFormatter());//change by suman  old*/ 
+                
             if (context.getPlugins().sqlMapGenerated(gxf, this)) {
                 answer.add(gxf);
             }

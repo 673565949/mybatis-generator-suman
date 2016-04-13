@@ -54,7 +54,9 @@ public class PropertyRegistry {
     public static final String CONTEXT_AUTO_DELIMIT_KEYWORDS = "autoDelimitKeywords"; //$NON-NLS-1$
     public static final String CONTEXT_JAVA_FILE_ENCODING = "javaFileEncoding"; //$NON-NLS-1$
     public static final String CONTEXT_JAVA_FORMATTER = "javaFormatter"; //$NON-NLS-1$
-    public static final String CONTEXT_XML_FORMATTER = "xmlFormatter"; //$NON-NLS-1$
+    public static final String CONTEXT_XML_FORMATTER = "xmlFormatter";
+    
+    public static final String CONTEXT_XML_MREGEABLE= "xmlMergeable";// add by suman
 
     public static final String CLIENT_USE_LEGACY_BUILDER = "useLegacyBuilder"; //$NON-NLS-1$
     

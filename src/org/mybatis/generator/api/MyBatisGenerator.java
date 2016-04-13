@@ -240,7 +240,7 @@ public class MyBatisGenerator {
 		// now save the files
 		callback.saveStarted(generatedXmlFiles.size() + generatedJavaFiles.size());
 
-		for (GeneratedXmlFile gxf : generatedXmlFiles) {
+		for (GeneratedXmlFile gxf : generatedXmlFiles) {//开始生成xml文件
 			projects.add(gxf.getTargetProject());
 
 			File targetFile;
@@ -248,8 +248,8 @@ public class MyBatisGenerator {
 			try {
 				File directory = shellCallback.getDirectory(gxf.getTargetProject(), gxf.getTargetPackage());
 				targetFile = new File(directory, gxf.getFileName());
-				if (targetFile.exists()) {
-					if (gxf.isMergeable()) {
+				if (targetFile.exists()) {//如果文件存在
+					if (gxf.isMergeable()) {//如果需要合并
 						source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
 					} else if (shellCallback.isOverwriteEnabled()) {
 						source = gxf.getFormattedContent();
