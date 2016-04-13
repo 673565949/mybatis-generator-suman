@@ -46,7 +46,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends
                 introspectedTable.getBaseResultMapId()));
 
         String returnType;
-        if (isSimple) {
+        if (isSimple) {//如果是简易模式
             returnType = introspectedTable.getBaseRecordType();
         } else {
             if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -61,7 +61,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends
 
         context.getCommentGenerator().addComment(answer);
 
-        if (introspectedTable.isConstructorBased()) {
+        if (introspectedTable.isConstructorBased()) {//是否生成构造函数
             addResultMapConstructorElements(answer);
         } else {
             addResultMapElements(answer);

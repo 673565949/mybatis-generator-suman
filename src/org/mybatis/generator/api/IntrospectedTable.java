@@ -1315,7 +1315,7 @@ public abstract class IntrospectedTable {
         StringBuilder sb = new StringBuilder();
         sb.append(calculateJavaClientImplementationPackage());
         sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append(fullyQualifiedTable.getDomainObjectName());//生成DAOImpl类名
         sb.append("DAOImpl"); //$NON-NLS-1$
         setDAOImplementationType(sb.toString());
 

@@ -56,22 +56,22 @@ public class DefaultShellCallback implements ShellCallback {
         // created
         // if it does not already exist
 
-        File project = new File(targetProject);
-        if (!project.isDirectory()) {
+        File project = new File(targetProject);//目标项目
+        if (!project.isDirectory()) {//如果不是一个目录
             throw new ShellException(getString("Warning.9", //$NON-NLS-1$
                     targetProject));
         }
 
         StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(targetPackage, "."); //$NON-NLS-1$
-        while (st.hasMoreTokens()) {
+        while (st.hasMoreTokens()) {//将包名处理成对应的路径
             sb.append(st.nextToken());
             sb.append(File.separatorChar);
         }
 
         File directory = new File(project, sb.toString());
         if (!directory.isDirectory()) {
-            boolean rc = directory.mkdirs();
+            boolean rc = directory.mkdirs();//创建目录
             if (!rc) {
                 throw new ShellException(getString("Warning.10", //$NON-NLS-1$
                         directory.getAbsolutePath()));

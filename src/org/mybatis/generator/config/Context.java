@@ -687,20 +687,20 @@ public class Context extends PropertyHolder {
         for (PluginConfiguration pluginConfiguration : pluginConfigurations) {
             Plugin plugin = ObjectFactory.createPlugin(this,pluginConfiguration);
             if (plugin.validate(warnings)) {
-                pluginAggregator.addPlugin(plugin);
+                pluginAggregator.addPlugin(plugin);//将插件放入插件整合器
             } else {
                 warnings.add(getString("Warning.24",pluginConfiguration.getConfigurationType(), id));
             }
         }
 
-        if (introspectedTables != null) {
+        if (introspectedTables != null) {//如果有表 为每个表生成对应的生成类
             for (IntrospectedTable introspectedTable : introspectedTables) {
                 callback.checkCancel();
 
                 introspectedTable.initialize();
-                introspectedTable.calculateGenerators(warnings, callback);
-                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
-                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
+                introspectedTable.calculateGenerators(warnings, callback);//初始化生成器
+                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());//添加java生成器
+                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());//添加xml生成器
 
                 generatedJavaFiles.addAll(pluginAggregator.contextGenerateAdditionalJavaFiles(introspectedTable));
                 generatedXmlFiles.addAll(pluginAggregator.contextGenerateAdditionalXmlFiles(introspectedTable));

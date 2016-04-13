@@ -62,11 +62,11 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
         XmlElement answer = new XmlElement("mapper"); //$NON-NLS-1$
         String namespace = introspectedTable.getMyBatis3SqlMapNamespace();
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
-                namespace));
+                namespace));//新建mapper标签 设置属性为namespace
 
-        context.getCommentGenerator().addRootComment(answer);
+        context.getCommentGenerator().addRootComment(answer);//给root添加注释
 
-        addResultMapWithoutBLOBsElement(answer);
+        addResultMapWithoutBLOBsElement(answer);//添加没有BLOBs对象的ResultMap标签
         addResultMapWithBLOBsElement(answer);
         addExampleWhereClauseElement(answer);
         addMyBatis3UpdateByExampleWhereClauseElement(answer);
@@ -92,7 +92,7 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addResultMapWithoutBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateBaseResultMap()) {
-            AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator(false);
+            AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator(false);//
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
@@ -254,8 +254,8 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
     public Document getDocument() {
         Document document = new Document(
                 XmlConstants.MYBATIS3_MAPPER_PUBLIC_ID,
-                XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);
-        document.setRootElement(getSqlMapElement());
+                XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);//新建一个Document对象  并复制publicid 喝 systemid
+        document.setRootElement(getSqlMapElement());//添加根节点
 
         if (!context.getPlugins().sqlMapDocumentGenerated(document,
                 introspectedTable)) {

@@ -71,10 +71,10 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
     @Override
     public void calculateGenerators(List<String> warnings,
             ProgressCallback progressCallback) {
-        calculateJavaModelGenerators(warnings, progressCallback);
+        calculateJavaModelGenerators(warnings, progressCallback);//计算生成 java Model类生成器
         
         AbstractJavaClientGenerator javaClientGenerator =
-            calculateClientGenerators(warnings, progressCallback);
+            calculateClientGenerators(warnings, progressCallback);//计算生成 java Client类生成器
             
         calculateXmlMapperGenerator(javaClientGenerator, warnings, progressCallback);
     }
@@ -92,16 +92,16 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
     protected void calculateXmlMapperGenerator(AbstractJavaClientGenerator javaClientGenerator, 
             List<String> warnings,
             ProgressCallback progressCallback) {
-        if (javaClientGenerator == null) {
+        if (javaClientGenerator == null) {//如果javaClientGenerator是空的 也就是不生成javaClientGenerator  使用XMLMapperGenerator 生成xml文件
             if (context.getSqlMapGeneratorConfiguration() != null) {
                 xmlMapperGenerator = new XMLMapperGenerator();
             }
         } else {
-            xmlMapperGenerator = javaClientGenerator.getMatchedXMLGenerator();
+            xmlMapperGenerator = javaClientGenerator.getMatchedXMLGenerator();//如果javaClientGenerator不是空的 那么得到对应的xml生成器
         }
         
         initializeAbstractGenerator(xmlMapperGenerator, warnings,
-                progressCallback);
+                progressCallback);//初始化
     }
 
     /**
@@ -145,11 +145,11 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
 
         AbstractJavaClientGenerator javaGenerator;
         if ("XMLMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new JavaMapperGenerator();
+            javaGenerator = new JavaMapperGenerator();//XML文件模式
         } else if ("MIXEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new MixedClientGenerator();
+            javaGenerator = new MixedClientGenerator();//混合模式
         } else if ("ANNOTATEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new AnnotatedClientGenerator();
+            javaGenerator = new AnnotatedClientGenerator();//注解模式
         } else if ("MAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
             javaGenerator = new JavaMapperGenerator();
         } else {
@@ -170,21 +170,21 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
      */
     protected void calculateJavaModelGenerators(List<String> warnings,
             ProgressCallback progressCallback) {
-        if (getRules().generateExampleClass()) {//生成example类
+        if (getRules().generateExampleClass()) {//是否生成example类
             AbstractJavaGenerator javaGenerator = new ExampleGenerator();
             initializeAbstractGenerator(javaGenerator, warnings,
                     progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
 
-        if (getRules().generatePrimaryKeyClass()) {//生成主键类
+        if (getRules().generatePrimaryKeyClass()) {//是否生成主键类
             AbstractJavaGenerator javaGenerator = new PrimaryKeyGenerator();
             initializeAbstractGenerator(javaGenerator, warnings,
-                    progressCallback);
+                    progressCallback);//初始化，所谓的初始化就是把需要的值设置给javaGenerator 比如context配置啊  表配置啊什么的
             javaModelGenerators.add(javaGenerator);
         }
 
-        if (getRules().generateBaseRecordClass()) {//生成baseRecord类
+        if (getRules().generateBaseRecordClass()) {//是否生成baseRecord类
             AbstractJavaGenerator javaGenerator = new BaseRecordGenerator();
             initializeAbstractGenerator(javaGenerator, warnings,
                     progressCallback);
