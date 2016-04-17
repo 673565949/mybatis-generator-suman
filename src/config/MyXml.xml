@@ -5,7 +5,7 @@
 <generatorConfiguration>
 <!-- 数据库驱动 -->
 	 <classPathEntry	location="libs/mysql-connector-java-5.1.5-bin.jar"/>
-	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="flat" >
+	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="hierarchical" >
 		<property name="autoDelimitKeywords" value="true"/>
 		<property name="beginningDelimiter" value="`"/>
 		<property name="endingDelimiter" value="`"/>

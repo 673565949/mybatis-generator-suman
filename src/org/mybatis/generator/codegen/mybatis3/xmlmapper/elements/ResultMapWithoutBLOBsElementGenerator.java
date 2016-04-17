@@ -29,147 +29,122 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
  * @author Jeff Butler
  * 
  */
-public class ResultMapWithoutBLOBsElementGenerator extends
-        AbstractXmlElementGenerator {
+public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    private boolean isSimple;
+	private boolean isSimple;
 
-    public ResultMapWithoutBLOBsElementGenerator(boolean isSimple) {
-        super();
-        this.isSimple = isSimple;
-    }
+	public ResultMapWithoutBLOBsElementGenerator(boolean isSimple) {
+		super();
+		this.isSimple = isSimple;
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                introspectedTable.getBaseResultMapId()));
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("resultMap");//创建resultMap标签
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapId()));//添加属性 id
 
-        String returnType;
-        if (isSimple) {//如果是简易模式
-            returnType = introspectedTable.getBaseRecordType();
-        } else {
-            if (introspectedTable.getRules().generateBaseRecordClass()) {
-                returnType = introspectedTable.getBaseRecordType();
-            } else {
-                returnType = introspectedTable.getPrimaryKeyType();
-            }
-        }
+		String returnType;
+		if (isSimple) {// 如果是简易模式
+			returnType = introspectedTable.getBaseRecordType();
+		} else {
+			if (introspectedTable.getRules().generateBaseRecordClass()) {
+				returnType = introspectedTable.getBaseRecordType();
+			} else {
+				returnType = introspectedTable.getPrimaryKeyType();
+			}
+		}
 
-        answer.addAttribute(new Attribute("type", //$NON-NLS-1$
-                returnType));
+		answer.addAttribute(new Attribute("type", returnType));
 
-        context.getCommentGenerator().addComment(answer);
+		context.getCommentGenerator().addComment(answer);
 
-        if (introspectedTable.isConstructorBased()) {//是否生成构造函数
-            addResultMapConstructorElements(answer);
-        } else {
-            addResultMapElements(answer);
-        }
+		if (introspectedTable.isConstructorBased()) {// 是否生成构造函数
+			addResultMapConstructorElements(answer);
+		} else {
+			addResultMapElements(answer);
+		}
 
-        if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(
-                answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+	}
 
-    private void addResultMapElements(XmlElement answer) {
-        for (IntrospectedColumn introspectedColumn : introspectedTable
-                .getPrimaryKeyColumns()) {
-            XmlElement resultElement = new XmlElement("id"); //$NON-NLS-1$
+	private void addResultMapElements(XmlElement answer) {
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			XmlElement resultElement = new XmlElement("id");
 
-            resultElement
-                    .addAttribute(new Attribute(
-                            "column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute(
-                    "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            /*resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));*/
+			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
+			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty()));
+			/*
+			 * resultElement.addAttribute(new Attribute("jdbcType",
+			 * introspectedColumn.getJdbcTypeName()));
+			 */
 
-            if (stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+			if (stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
+			}
 
-            answer.addElement(resultElement);
-        }
+			answer.addElement(resultElement);
+		}
 
-        List<IntrospectedColumn> columns;
-        if (isSimple) {
-            columns = introspectedTable.getNonPrimaryKeyColumns();
-        } else {
-            columns = introspectedTable.getBaseColumns();
-        }
-        for (IntrospectedColumn introspectedColumn : columns) {
-            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
+		List<IntrospectedColumn> columns;
+		if (isSimple) {
+			columns = introspectedTable.getNonPrimaryKeyColumns();
+		} else {
+			columns = introspectedTable.getBaseColumns();
+		}
+		for (IntrospectedColumn introspectedColumn : columns) {
+			XmlElement resultElement = new XmlElement("result");
 
-            resultElement
-                    .addAttribute(new Attribute(
-                            "column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute(
-                    "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));
+			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
+			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty()));
+			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
 
-            if (stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+			if (stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
+			}
 
-            answer.addElement(resultElement);
-        }
-    }
+			answer.addElement(resultElement);
+		}
+	}
 
-    private void addResultMapConstructorElements(XmlElement answer) {
-        XmlElement constructor = new XmlElement("constructor"); //$NON-NLS-1$
+	private void addResultMapConstructorElements(XmlElement answer) {
+		XmlElement constructor = new XmlElement("constructor");
 
-        for (IntrospectedColumn introspectedColumn : introspectedTable
-                .getPrimaryKeyColumns()) {
-            XmlElement resultElement = new XmlElement("idArg"); //$NON-NLS-1$
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			XmlElement resultElement = new XmlElement("idArg");
 
-            resultElement
-                    .addAttribute(new Attribute(
-                            "column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));
-            resultElement.addAttribute(new Attribute("javaType", //$NON-NLS-1$
-                    introspectedColumn.getFullyQualifiedJavaType()
-                            .getFullyQualifiedName()));
+			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
+			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
+			resultElement.addAttribute(new Attribute("javaType", introspectedColumn.getFullyQualifiedJavaType().getFullyQualifiedName()));
 
-            if (stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+			if (stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
+			}
 
-            constructor.addElement(resultElement);
-        }
+			constructor.addElement(resultElement);
+		}
 
-        List<IntrospectedColumn> columns;
-        if (isSimple) {
-            columns = introspectedTable.getNonPrimaryKeyColumns();
-        } else {
-            columns = introspectedTable.getBaseColumns();
-        }
-        for (IntrospectedColumn introspectedColumn : columns) {
-            XmlElement resultElement = new XmlElement("arg"); //$NON-NLS-1$
+		List<IntrospectedColumn> columns;
+		if (isSimple) {
+			columns = introspectedTable.getNonPrimaryKeyColumns();
+		} else {
+			columns = introspectedTable.getBaseColumns();
+		}
+		for (IntrospectedColumn introspectedColumn : columns) {
+			XmlElement resultElement = new XmlElement("arg");
 
-            resultElement
-                    .addAttribute(new Attribute(
-                            "column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));
-            resultElement.addAttribute(new Attribute("javaType", //$NON-NLS-1$
-                    introspectedColumn.getFullyQualifiedJavaType()
-                            .getFullyQualifiedName()));
+			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
+			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
+			resultElement.addAttribute(new Attribute("javaType", introspectedColumn.getFullyQualifiedJavaType().getFullyQualifiedName()));
 
-            if (stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+			if (stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
+			}
 
-            constructor.addElement(resultElement);
-        }
+			constructor.addElement(resultElement);
+		}
 
-        answer.addElement(constructor);
-    }
+		answer.addElement(constructor);
+	}
 }

@@ -43,7 +43,7 @@ public class FlatModelRules extends BaseRules {
      * @return true if the primary key should be generated
      */
     public boolean generatePrimaryKeyClass() {
-        return true;
+        return false;
     }
 
     /**
@@ -52,7 +52,7 @@ public class FlatModelRules extends BaseRules {
      * @return true if the class should be generated
      */
     public boolean generateBaseRecordClass() {
-        return false;
+        return true;
     }
 
     /**

@@ -51,217 +51,204 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimary
  */
 public class XMLMapperGenerator extends AbstractXmlGenerator {
 
-    public XMLMapperGenerator() {
-        super();
-    }
+	public XMLMapperGenerator() {
+		super();
+	}
 
-    protected XmlElement getSqlMapElement() {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startTask(getString(
-                "Progress.12", table.toString())); //$NON-NLS-1$
-        XmlElement answer = new XmlElement("mapper"); //$NON-NLS-1$
-        String namespace = introspectedTable.getMyBatis3SqlMapNamespace();
-        answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
-                namespace));//新建mapper标签 设置属性为namespace
+	protected XmlElement getSqlMapElement() {
+		FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+		progressCallback.startTask(getString("Progress.12", table.toString()));
+		XmlElement answer = new XmlElement("mapper");// 新建mapper标签
+		String namespace = introspectedTable.getMyBatis3SqlMapNamespace();
+		answer.addAttribute(new Attribute("namespace", namespace));// 设置namespace属性
+																	
 
-        context.getCommentGenerator().addRootComment(answer);//给root添加注释
+		context.getCommentGenerator().addRootComment(answer);// 添加注释
 
-        addResultMapWithoutBLOBsElement(answer);//添加没有BLOBs对象的ResultMap标签
-        addResultMapWithBLOBsElement(answer);
-        addExampleWhereClauseElement(answer);
-        addMyBatis3UpdateByExampleWhereClauseElement(answer);
-        addBaseColumnListElement(answer);
-        addBlobColumnListElement(answer);
-        addSelectByExampleWithBLOBsElement(answer);
-        addSelectByExampleWithoutBLOBsElement(answer);
-        addSelectByPrimaryKeyElement(answer);
-        addDeleteByPrimaryKeyElement(answer);
-        addDeleteByExampleElement(answer);
-        addInsertElement(answer);
-        addInsertSelectiveElement(answer);
-        addCountByExampleElement(answer);
-        addUpdateByExampleSelectiveElement(answer);
-        addUpdateByExampleWithBLOBsElement(answer);
-        addUpdateByExampleWithoutBLOBsElement(answer);
-        addUpdateByPrimaryKeySelectiveElement(answer);
-        addUpdateByPrimaryKeyWithBLOBsElement(answer);
-        addUpdateByPrimaryKeyWithoutBLOBsElement(answer);
+		addResultMapWithoutBLOBsElement(answer);// 添加没有BLOBs对象的ResultMap标签
+		addResultMapWithBLOBsElement(answer);// 添加有BLOBs对象的ResultMap标签
+		addExampleWhereClauseElement(answer);
+		addMyBatis3UpdateByExampleWhereClauseElement(answer);
+		addBaseColumnListElement(answer);
+		addBlobColumnListElement(answer);
+		addSelectByExampleWithBLOBsElement(answer);
+		addSelectByExampleWithoutBLOBsElement(answer);
+		addSelectByPrimaryKeyElement(answer);
+		addDeleteByPrimaryKeyElement(answer);
+		addDeleteByExampleElement(answer);
+		addInsertElement(answer);
+		addInsertSelectiveElement(answer);
+		addCountByExampleElement(answer);
+		addUpdateByExampleSelectiveElement(answer);
+		addUpdateByExampleWithBLOBsElement(answer);
+		addUpdateByExampleWithoutBLOBsElement(answer);
+		addUpdateByPrimaryKeySelectiveElement(answer);
+		addUpdateByPrimaryKeyWithBLOBsElement(answer);
+		addUpdateByPrimaryKeyWithoutBLOBsElement(answer);
 
-        return answer;
-    }
+		return answer;
+	}
 
-    protected void addResultMapWithoutBLOBsElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateBaseResultMap()) {
-            AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator(false);//
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addResultMapWithoutBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateBaseResultMap()) {
+			AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator(false);//
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addResultMapWithBLOBsElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new ResultMapWithBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addResultMapWithBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new ResultMapWithBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addExampleWhereClauseElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
-            AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator(
-                    false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addExampleWhereClauseElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
+			AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator(false);
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addMyBatis3UpdateByExampleWhereClauseElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules()
-                .generateMyBatis3UpdateByExampleWhereClause()) {
-            AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator(
-                    true);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addMyBatis3UpdateByExampleWhereClauseElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateMyBatis3UpdateByExampleWhereClause()) {
+			AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator(true);
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addBaseColumnListElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateBaseColumnList()) {
-            AbstractXmlElementGenerator elementGenerator = new BaseColumnListElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addBaseColumnListElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateBaseColumnList()) {
+			AbstractXmlElementGenerator elementGenerator = new BaseColumnListElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addBlobColumnListElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateBlobColumnList()) {
-            AbstractXmlElementGenerator elementGenerator = new BlobColumnListElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addBlobColumnListElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateBlobColumnList()) {
+			AbstractXmlElementGenerator elementGenerator = new BlobColumnListElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addSelectByExampleWithoutBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addSelectByExampleWithoutBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addSelectByExampleWithBLOBsElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addSelectByExampleWithBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addSelectByPrimaryKeyElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
-            AbstractXmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addSelectByPrimaryKeyElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+			AbstractXmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addDeleteByExampleElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateDeleteByExample()) {
-            AbstractXmlElementGenerator elementGenerator = new DeleteByExampleElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addDeleteByExampleElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateDeleteByExample()) {
+			AbstractXmlElementGenerator elementGenerator = new DeleteByExampleElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+			AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(false);
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addInsertElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateInsert()) {
-            AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addInsertElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateInsert()) {
+			AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator(false);
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addInsertSelectiveElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateInsertSelective()) {
-            AbstractXmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addInsertSelectiveElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateInsertSelective()) {
+			AbstractXmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addCountByExampleElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateCountByExample()) {
-            AbstractXmlElementGenerator elementGenerator = new CountByExampleElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addCountByExampleElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateCountByExample()) {
+			AbstractXmlElementGenerator elementGenerator = new CountByExampleElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByExampleSelectiveElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByExampleSelective()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleSelectiveElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByExampleSelectiveElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByExampleSelective()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByExampleSelectiveElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByExampleWithBLOBsElement(XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByExampleWithBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByExampleWithBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByExampleWithBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByExampleWithoutBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByExampleWithoutBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithoutBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByExampleWithoutBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByExampleWithoutBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithoutBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByPrimaryKeySelectiveElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByPrimaryKeySelectiveElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByPrimaryKeyWithBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByPrimaryKeyWithBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void addUpdateByPrimaryKeyWithoutBLOBsElement(
-            XmlElement parentElement) {
-        if (introspectedTable.getRules()
-                .generateUpdateByPrimaryKeyWithoutBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator(false);
-            initializeAndExecuteGenerator(elementGenerator, parentElement);
-        }
-    }
+	protected void addUpdateByPrimaryKeyWithoutBLOBsElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+			AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator(false);
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+	}
 
-    protected void initializeAndExecuteGenerator(
-            AbstractXmlElementGenerator elementGenerator,
-            XmlElement parentElement) {
-        elementGenerator.setContext(context);
-        elementGenerator.setIntrospectedTable(introspectedTable);
-        elementGenerator.setProgressCallback(progressCallback);
-        elementGenerator.setWarnings(warnings);
-        elementGenerator.addElements(parentElement);
-    }
+	protected void initializeAndExecuteGenerator(AbstractXmlElementGenerator elementGenerator, XmlElement parentElement) {
+		elementGenerator.setContext(context);
+		elementGenerator.setIntrospectedTable(introspectedTable);
+		elementGenerator.setProgressCallback(progressCallback);
+		elementGenerator.setWarnings(warnings);
+		elementGenerator.addElements(parentElement);
+	}
 
-    @Override
-    public Document getDocument() {
-        Document document = new Document(
-                XmlConstants.MYBATIS3_MAPPER_PUBLIC_ID,
-                XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);//新建一个Document对象  并复制publicid 喝 systemid
-        document.setRootElement(getSqlMapElement());//添加根节点
+	@Override
+	public Document getDocument() {
+		Document document = new Document(XmlConstants.MYBATIS3_MAPPER_PUBLIC_ID, XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);// 新建一个Document对象
+																															// 并复制publicid
+																															// 喝
+																															// systemid
+		document.setRootElement(getSqlMapElement());// 添加根节点
 
-        if (!context.getPlugins().sqlMapDocumentGenerated(document,
-                introspectedTable)) {
-            document = null;
-        }
+		if (!context.getPlugins().sqlMapDocumentGenerated(document, introspectedTable)) {
+			document = null;
+		}
 
-        return document;
-    }
+		return document;
+	}
 }
