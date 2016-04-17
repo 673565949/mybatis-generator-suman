@@ -16,10 +16,13 @@
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getValidPropertyName;
 
 import java.util.List;
 
 import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
@@ -63,7 +66,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 		} else {
 			addResultMapElements(answer);
 		}
-
+		addResultMapAssociationElements(answer);
 		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
 			parentElement.addElement(answer);
 		}
@@ -147,4 +150,40 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 
 		answer.addElement(constructor);
 	}
+	
+	private void addResultMapAssociationElements(XmlElement answer) {
+		
+
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
+			if(introspectedImportColumn==null) continue;
+			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			XmlElement association = new XmlElement("association");
+			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
+			association.addAttribute(new Attribute("property", getValidPropertyName(type.getShortName())));
+			association.addAttribute(new Attribute("resultMap", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId()));
+
+			answer.addElement(association);
+		}
+
+		List<IntrospectedColumn> columns;
+		if (isSimple) {
+			columns = introspectedTable.getNonPrimaryKeyColumns();
+		} else {
+			columns = introspectedTable.getBaseColumns();
+		}
+		for (IntrospectedColumn introspectedColumn : columns) {
+			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
+			if(introspectedImportColumn==null) continue;
+			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
+			XmlElement association = new XmlElement("association");
+			association.addAttribute(new Attribute("property",getValidPropertyName(type.getShortName())));
+			association.addAttribute(new Attribute("resultMap", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId()));
+
+			answer.addElement(association);
+		}
+
+	}
+	
 }

@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.mybatis.generator.api.FullyQualifiedTable;
+import org.mybatis.generator.api.ImportColumn;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.JavaTypeResolver;
@@ -110,7 +111,7 @@ public class DatabaseIntrospector {
 			rs = databaseMetaData.getPrimaryKeys(table.getIntrospectedCatalog(), table.getIntrospectedSchema(), table.getIntrospectedTableName());
 		} catch (SQLException e) {
 			closeResultSet(rs);
-			warnings.add(getString("Warning.15")); //$NON-NLS-1$
+			warnings.add(getString("Warning.15"));
 			return;
 		}
 
@@ -118,8 +119,8 @@ public class DatabaseIntrospector {
 			// keep primary columns in key sequence order
 			Map<Short, String> keyColumns = new TreeMap<Short, String>();
 			while (rs.next()) {
-				String columnName = rs.getString("COLUMN_NAME"); //$NON-NLS-1$
-				short keySeq = rs.getShort("KEY_SEQ"); //$NON-NLS-1$
+				String columnName = rs.getString("COLUMN_NAME");
+				short keySeq = rs.getShort("KEY_SEQ");
 				keyColumns.put(keySeq, columnName);
 			}
 
@@ -165,33 +166,28 @@ public class DatabaseIntrospector {
 		// actually exists in the table
 		for (ColumnOverride columnOverride : tableConfiguration.getColumnOverrides()) {
 			if (introspectedTable.getColumn(columnOverride.getColumnName()) == null) {
-				warnings.add(getString("Warning.3", //$NON-NLS-1$
-						columnOverride.getColumnName(), table.toString()));
+				warnings.add(getString("Warning.3", columnOverride.getColumnName(), table.toString()));
 			}
 		}
 
 		// make sure that every column listed in ignored columns
 		// actually exists in the table
 		for (String string : tableConfiguration.getIgnoredColumnsInError()) {
-			warnings.add(getString("Warning.4", //$NON-NLS-1$
-					string, table.toString()));
+			warnings.add(getString("Warning.4", string, table.toString()));
 		}
 
 		GeneratedKey generatedKey = tableConfiguration.getGeneratedKey();
 		if (generatedKey != null && introspectedTable.getColumn(generatedKey.getColumn()) == null) {
 			if (generatedKey.isIdentity()) {
-				warnings.add(getString("Warning.5", //$NON-NLS-1$
-						generatedKey.getColumn(), table.toString()));
+				warnings.add(getString("Warning.5", generatedKey.getColumn(), table.toString()));
 			} else {
-				warnings.add(getString("Warning.6", //$NON-NLS-1$
-						generatedKey.getColumn(), table.toString()));
+				warnings.add(getString("Warning.6", generatedKey.getColumn(), table.toString()));
 			}
 		}
 
 		for (IntrospectedColumn ic : introspectedTable.getAllColumns()) {
 			if (JavaReservedWords.containsWord(ic.getJavaProperty())) {
-				warnings.add(getString("Warning.26", //$NON-NLS-1$
-						ic.getActualColumnName(), table.toString()));
+				warnings.add(getString("Warning.26", ic.getActualColumnName(), table.toString()));
 			}
 		}
 	}
@@ -216,10 +212,10 @@ public class DatabaseIntrospector {
 			return null;
 		}
 
-		removeIgnoredColumns(tc, columns);//移除需要忽略的列
-		calculateExtraColumnInformation(tc, columns);//计算额外列的信息
-		applyColumnOverrides(tc, columns);//应用列覆盖内容
-		calculateIdentityColumns(tc, columns);//计算主键列
+		removeIgnoredColumns(tc, columns);// 移除需要忽略的列
+		calculateExtraColumnInformation(tc, columns);// 计算额外列的信息
+		applyColumnOverrides(tc, columns);// 应用列覆盖内容
+		calculateIdentityColumns(tc, columns);// 计算主键列
 
 		List<IntrospectedTable> introspectedTables = calculateIntrospectedTables(tc, columns);
 
@@ -233,13 +229,13 @@ public class DatabaseIntrospector {
 			if (!introspectedTable.hasAnyColumns()) {
 				// add warning that the table has no columns, remove from the
 				// list
-				String warning = getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$
+				String warning = getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString());
 				warnings.add(warning);
 				iter.remove();
 			} else if (!introspectedTable.hasPrimaryKeyColumns() && !introspectedTable.hasBaseColumns()) {
 				// add warning that the table has only BLOB columns, remove from
 				// the list
-				String warning = getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$ 
+				String warning = getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString());
 				warnings.add(warning);
 				iter.remove();
 			} else {
@@ -269,7 +265,7 @@ public class DatabaseIntrospector {
 				if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {
 					tableColumns.remove();
 					if (logger.isDebugEnabled()) {
-						logger.debug(getString("Tracing.3",introspectedColumn.getActualColumnName(), entry.getKey().toString()));
+						logger.debug(getString("Tracing.3", introspectedColumn.getActualColumnName(), entry.getKey().toString()));
 					}
 				}
 			}
@@ -277,8 +273,8 @@ public class DatabaseIntrospector {
 	}
 
 	/**
-	 * 计算额外列信息
-	 * 基本上就是 获取下jdbc类型 处理下列名然后作为model类的变量名
+	 * 计算额外列信息 基本上就是 获取下jdbc类型 处理下列名然后作为model类的变量名
+	 * 
 	 * @param tc
 	 *            表配置信息
 	 * @param columns
@@ -288,72 +284,73 @@ public class DatabaseIntrospector {
 		StringBuilder sb = new StringBuilder();
 		Pattern pattern = null;
 		String replaceString = null;
-		if (tc.getColumnRenamingRule() != null) {//如果需要对列重命名
+		if (tc.getColumnRenamingRule() != null) {// 如果需要对列重命名
 			pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
 			replaceString = tc.getColumnRenamingRule().getReplaceString();
-			replaceString = replaceString == null ? "" : replaceString; //$NON-NLS-1$
+			replaceString = replaceString == null ? "" : replaceString;
 		}
 
 		for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
 			for (IntrospectedColumn introspectedColumn : entry.getValue()) {
 				String calculatedColumnName;
 				if (pattern == null) {
-					calculatedColumnName = introspectedColumn.getActualColumnName();//得到列名
+					calculatedColumnName = introspectedColumn.getActualColumnName();// 得到列名
 				} else {
 					Matcher matcher = pattern.matcher(introspectedColumn.getActualColumnName());
-					calculatedColumnName = matcher.replaceAll(replaceString);//将表名替换
+					calculatedColumnName = matcher.replaceAll(replaceString);// 将表名替换
 				}
 
-				if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) {//如果使用实际列名作为类的属性
+				if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) {// 如果使用实际列名作为类的属性
 					introspectedColumn.setJavaProperty(getValidPropertyName(calculatedColumnName));
-				} else if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_COMPOUND_PROPERTY_NAMES))) {//如果需要拼合备注信息到列名中
+				} else if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_COMPOUND_PROPERTY_NAMES))) {// 如果需要拼合备注信息到列名中
 					sb.setLength(0);
 					sb.append(calculatedColumnName);
 					sb.append('_');
 					sb.append(getCamelCaseString(introspectedColumn.getRemarks(), true));
 					introspectedColumn.setJavaProperty(getValidPropertyName(sb.toString()));
-				} else {//将字符串转成驼峰标示
+				} else {// 将字符串转成驼峰标示
 					introspectedColumn.setJavaProperty(getCamelCaseString(calculatedColumnName, false));
 				}
 
 				FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.calculateJavaType(introspectedColumn);
-				//如果通过jdbc类型可以找到对应的jdbc类型
+				// 如果通过jdbc类型可以找到对应的jdbc类型
 				if (fullyQualifiedJavaType != null) {
-					introspectedColumn.setFullyQualifiedJavaType(fullyQualifiedJavaType);//通过jdbc类型 得到对应的java类型
-					introspectedColumn.setJdbcTypeName(javaTypeResolver.calculateJdbcTypeName(introspectedColumn));//得到对应的jdbc类型名
-				} else {//如果无法通过jdbc类型可以找到对应的jdbc类型
+					introspectedColumn.setFullyQualifiedJavaType(fullyQualifiedJavaType);// 通过jdbc类型
+																							// 得到对应的java类型
+					introspectedColumn.setJdbcTypeName(javaTypeResolver.calculateJdbcTypeName(introspectedColumn));// 得到对应的jdbc类型名
+				} else {// 如果无法通过jdbc类型可以找到对应的jdbc类型
 					// type cannot be resolved. Check for ignored or overridden
 					boolean warn = true;
-					if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {//如果这个列是需要忽略的  那么设置为false
+					if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {// 如果这个列是需要忽略的
+																						// 那么设置为false
 						warn = false;
 					}
 
 					ColumnOverride co = tc.getColumnOverride(introspectedColumn.getActualColumnName());
-					if (co != null) {//如果字段被重写
+					if (co != null) {// 如果字段被重写
 						if (stringHasValue(co.getJavaType()) && stringHasValue(co.getJavaType())) {//
 							warn = false;
 						}
 					}
 
 					// if the type is not supported, then we'll report a warning
-					if (warn) {//如果类型不支持
+					if (warn) {// 如果类型不支持
 						introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
-						introspectedColumn.setJdbcTypeName("OTHER"); //$NON-NLS-1$
+						introspectedColumn.setJdbcTypeName("OTHER");
 
-						String warning = getString("Warning.14", //$NON-NLS-1$
-								Integer.toString(introspectedColumn.getJdbcType()), entry.getKey().toString(), introspectedColumn.getActualColumnName());
+						String warning = getString("Warning.14", Integer.toString(introspectedColumn.getJdbcType()), entry.getKey().toString(), introspectedColumn.getActualColumnName());
 
 						warnings.add(warning);
 					}
 				}
 
-				if (context.autoDelimitKeywords()) {//如果需要自动分割sql关键字
-					if (SqlReservedWords.containsWord(introspectedColumn.getActualColumnName())) {//如果是关键字
-						introspectedColumn.setColumnNameDelimited(true);//列名需要分隔
+				if (context.autoDelimitKeywords()) {// 如果需要自动分割sql关键字
+					if (SqlReservedWords.containsWord(introspectedColumn.getActualColumnName())) {// 如果是关键字
+						introspectedColumn.setColumnNameDelimited(true);// 列名需要分隔
 					}
 				}
 
-				if (tc.isAllColumnDelimitingEnabled()) {//分隔全部的列
+				if (tc.isAllColumnDelimitingEnabled()) {// 分隔全部的列
 					introspectedColumn.setColumnNameDelimited(true);
 				}
 			}
@@ -369,20 +366,21 @@ public class DatabaseIntrospector {
 	 *            the columns
 	 */
 	private void calculateIdentityColumns(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
-		GeneratedKey gk = tc.getGeneratedKey();//得到主键生成设置
+		GeneratedKey gk = tc.getGeneratedKey();// 得到主键生成设置
 		if (gk == null) {
 			return;
 		}
 
-		for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {//遍历列信息Map
+		for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {// 遍历列信息Map
 			for (IntrospectedColumn introspectedColumn : entry.getValue()) {
-				if (isMatchedColumn(introspectedColumn, gk)) {//如果该列是主键列
-					if (gk.isIdentity() || gk.isJdbcStandard()) {//如果是id列 或者是jdbc标准
-						introspectedColumn.setIdentity(true);//是id
-						introspectedColumn.setSequenceColumn(false);//不是序列 列
+				if (isMatchedColumn(introspectedColumn, gk)) {// 如果该列是主键列
+					if (gk.isIdentity() || gk.isJdbcStandard()) {// 如果是id列
+																	// 或者是jdbc标准
+						introspectedColumn.setIdentity(true);// 是id
+						introspectedColumn.setSequenceColumn(false);// 不是序列 列
 					} else {
-						introspectedColumn.setIdentity(false);//不是id
-						introspectedColumn.setSequenceColumn(true);//是序列 列
+						introspectedColumn.setIdentity(false);// 不是id
+						introspectedColumn.setSequenceColumn(true);// 是序列 列
 					}
 				}
 			}
@@ -417,16 +415,15 @@ public class DatabaseIntrospector {
 	private void applyColumnOverrides(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
 		for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
 			for (IntrospectedColumn introspectedColumn : entry.getValue()) {
-				ColumnOverride columnOverride = tc.getColumnOverride(introspectedColumn.getActualColumnName());//如果是需要覆盖的列
+				ColumnOverride columnOverride = tc.getColumnOverride(introspectedColumn.getActualColumnName());// 如果是需要覆盖的列
 
 				if (columnOverride == null) {
 					continue;
 				}
 				if (logger.isDebugEnabled()) {
-					logger.debug(getString("Tracing.4", //$NON-NLS-1$
-							introspectedColumn.getActualColumnName(), entry.getKey().toString()));
+					logger.debug(getString("Tracing.4", introspectedColumn.getActualColumnName(), entry.getKey().toString()));
 				}
-				//下方的代码用来覆盖列信息 比如java变量名 jdbc类型啥的 转换器啥的
+				// 下方的代码用来覆盖列信息 比如java变量名 jdbc类型啥的 转换器啥的
 				if (stringHasValue(columnOverride.getJavaProperty())) {
 					introspectedColumn.setJavaProperty(columnOverride.getJavaProperty());
 				}
@@ -448,7 +445,7 @@ public class DatabaseIntrospector {
 				}
 
 				introspectedColumn.setProperties(columnOverride.getProperties());
-				
+
 			}
 		}
 	}
@@ -487,17 +484,17 @@ public class DatabaseIntrospector {
 			localSchema = tc.getSchema();
 			localTableName = tc.getTableName();
 		}
-		// 是否需要对表名_ % 进行转义 
+		// 是否需要对表名_ % 进行转义
 		if (tc.isWildcardEscapingEnabled()) {
 			String escapeString = databaseMetaData.getSearchStringEscape();
 
 			StringBuilder sb = new StringBuilder();
 			StringTokenizer st;
 			if (localSchema != null) {
-				st = new StringTokenizer(localSchema, "_%", true); //$NON-NLS-1$
+				st = new StringTokenizer(localSchema, "_%", true);
 				while (st.hasMoreTokens()) {
 					String token = st.nextToken();
-					if (token.equals("_") || token.equals("%")) { //$NON-NLS-1$
+					if (token.equals("_") || token.equals("%")) {
 						sb.append(escapeString);
 					}
 					sb.append(token);
@@ -506,10 +503,10 @@ public class DatabaseIntrospector {
 			}
 
 			sb.setLength(0);
-			st = new StringTokenizer(localTableName, "_%", true); //$NON-NLS-1$
+			st = new StringTokenizer(localTableName, "_%", true);
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
-				if (token.equals("_") || token.equals("%")) { //$NON-NLS-1$
+				if (token.equals("_") || token.equals("%")) {
 					sb.append(escapeString);
 				}
 				sb.append(token);
@@ -521,28 +518,44 @@ public class DatabaseIntrospector {
 
 		if (logger.isDebugEnabled()) {
 			String fullTableName = composeFullyQualifiedTableName(localCatalog, localSchema, localTableName, '.');
-			logger.debug(getString("Tracing.1", fullTableName)); //$NON-NLS-1$
+			logger.debug(getString("Tracing.1", fullTableName));
 		}
-
-		ResultSet rs = databaseMetaData.getColumns(localCatalog, localSchema, localTableName, null);//得到数据库列字段
-
+		
+		//add by suman
+		Map<ActualTableName,Map> importTableMap = new HashMap<ActualTableName,Map>();
+		ResultSet rs = databaseMetaData.getImportedKeys(localCatalog, localSchema, localTableName);// 获取表的外键
 		while (rs.next()) {
-			IntrospectedColumn introspectedColumn = ObjectFactory.createIntrospectedColumn(context);//创建一个字段反省者
 
-			introspectedColumn.setTableAlias(tc.getAlias());//设置字段所属的表的别称
-			introspectedColumn.setJdbcType(rs.getInt("DATA_TYPE")); //设置字段的数据库类型
-			introspectedColumn.setLength(rs.getInt("COLUMN_SIZE")); //设置字段的长度
-			introspectedColumn.setActualColumnName(rs.getString("COLUMN_NAME")); //设置列的名称
-			introspectedColumn.setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //字段是否可以为空
-			introspectedColumn.setScale(rs.getInt("DECIMAL_DIGITS")); //小数部分的位数
-			introspectedColumn.setRemarks(rs.getString("REMARKS")); //注释
-			introspectedColumn.setDefaultValue(rs.getString("COLUMN_DEF")); //默认值
-			if(localTableName.equals("equipment")){
-				databaseMetaData.getExportedKeys(localCatalog, localSchema, localTableName);
+			ActualTableName importAtn = new ActualTableName(localCatalog, rs.getString("PKTABLE_SCHEM"), rs.getString("PKTABLE_NAME"));
+			ImportColumn importColumn = new ImportColumn(importAtn, rs.getString("PKCOLUMN_NAME"));		
+			
+			ActualTableName atn = new ActualTableName(localCatalog, rs.getString("FKTABLE_SCHEM"), rs.getString("FKTABLE_NAME"));
+			System.out.println(rs.getString("FKCOLUMN_NAME"));// 名称
+			Map<String,ImportColumn> importColumnMap = importTableMap.get(atn);
+			if(importColumnMap == null) {
+				importColumnMap = new HashMap<String,ImportColumn>();
+				importTableMap.put(atn, importColumnMap);
 			}
-			ActualTableName atn = new ActualTableName(rs.getString("TABLE_CAT"), //$NON-NLS-1$
-			rs.getString("TABLE_SCHEM"), //$NON-NLS-1$
-			rs.getString("TABLE_NAME")); //$NON-NLS-1$
+			importColumnMap.put(rs.getString("FKCOLUMN_NAME"), importColumn);
+
+		}
+		//add by suman
+
+		rs = databaseMetaData.getColumns(localCatalog, localSchema, localTableName, null);// 得到数据库列字段
+		
+		
+		while (rs.next()) {
+			IntrospectedColumn introspectedColumn = ObjectFactory.createIntrospectedColumn(context);// 创建一个字段反省者
+
+			introspectedColumn.setTableAlias(tc.getAlias());// 设置字段所属的表的别称
+			introspectedColumn.setJdbcType(rs.getInt("DATA_TYPE")); // 设置字段的数据库类型
+			introspectedColumn.setLength(rs.getInt("COLUMN_SIZE")); // 设置字段的长度
+			introspectedColumn.setActualColumnName(rs.getString("COLUMN_NAME")); // 设置列的名称
+			introspectedColumn.setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); // 字段是否可以为空
+			introspectedColumn.setScale(rs.getInt("DECIMAL_DIGITS")); // 小数部分的位数
+			introspectedColumn.setRemarks(rs.getString("REMARKS")); // 注释
+			introspectedColumn.setDefaultValue(rs.getString("COLUMN_DEF")); // 默认值
+			ActualTableName atn = new ActualTableName(localCatalog, rs.getString("TABLE_SCHEM"), rs.getString("TABLE_NAME"));
 
 			List<IntrospectedColumn> columns = answer.get(atn);
 			if (columns == null) {
@@ -551,28 +564,23 @@ public class DatabaseIntrospector {
 			}
 
 			columns.add(introspectedColumn);
-
+			//add by suman
+			Map<String,ImportColumn> importColumnMap = importTableMap.get(atn);
+			if(importColumnMap != null ){
+				ImportColumn importColumn = importColumnMap.get(rs.getString("COLUMN_NAME"));
+				if(importColumn!=null){
+					introspectedColumn.setImportColumn(importColumn);
+				}
+			}
+			
 			if (logger.isDebugEnabled()) {
-				logger.debug(getString("Tracing.2",introspectedColumn.getActualColumnName(), Integer.toString(introspectedColumn.getJdbcType()), atn.toString()));
+				logger.debug(getString("Tracing.2", introspectedColumn.getActualColumnName(), Integer.toString(introspectedColumn.getJdbcType()), atn.toString()));
 			}
 		}
-		
+
 		closeResultSet(rs);
-		if(localTableName.equals("equipment")){
-			rs = databaseMetaData.getImportedKeys(localCatalog, localSchema, localTableName);//获取表的外键
-			while (rs.next()) {
-				System.out.println(rs.getString("PKTABLE_CAT"));//被导入的主键表类别
-				System.out.println(rs.getString("PKTABLE_SCHEM"));//被导入的主键表模式
-				System.out.println(rs.getString("PKTABLE_NAME"));//被导入的主键表名称 
-				System.out.println(rs.getString("PKCOLUMN_NAME"));//被导入的主键列名称
-				System.out.println(rs.getString("FKTABLE_CAT"));//外键表类别（可为 null）
-				System.out.println(rs.getString("FKTABLE_SCHEM"));//外键表模式（可为 null）
-				System.out.println(rs.getString("FKTABLE_NAME"));//外键表名称 
-				System.out.println(rs.getString("FKCOLUMN_NAME"));//外键表名称 
-
-			}
-		}
-
+		
+		
 		if (answer.size() > 1 && !stringContainsSQLWildcard(localSchema) && !stringContainsSQLWildcard(localTableName)) {
 			// issue a warning if there is more than one table and
 			// no wildcards were used
@@ -589,8 +597,7 @@ public class DatabaseIntrospector {
 				sb.append(atn.toString());
 			}
 
-			warnings.add(getString("Warning.25", //$NON-NLS-1$
-					inputAtn.toString(), sb.toString()));
+			warnings.add(getString("Warning.25", inputAtn.toString(), sb.toString()));
 		}
 
 		return answer;
@@ -623,7 +630,7 @@ public class DatabaseIntrospector {
 			FullyQualifiedTable table = new FullyQualifiedTable(stringHasValue(tc.getCatalog()) ? atn.getCatalog() : null, stringHasValue(tc.getSchema()) ? atn.getSchema() : null, atn.getTableName(), tc.getDomainObjectName(), tc.getAlias(), isTrue(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_SCHEMA), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME), delimitIdentifiers, context);
 
 			IntrospectedTable introspectedTable = ObjectFactory.createIntrospectedTable(tc, table, context);
-
+			introspectedTable.setActualTableName(atn);
 			for (IntrospectedColumn introspectedColumn : entry.getValue()) {
 				introspectedTable.addColumn(introspectedColumn);
 			}

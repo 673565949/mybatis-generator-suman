@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.config.Context;
+import org.mybatis.generator.internal.db.ActualTableName;
 import org.mybatis.generator.internal.util.StringUtility;
 
 /**
@@ -65,7 +66,10 @@ public class IntrospectedColumn {
     protected String remarks;
 
     protected String defaultValue;
-
+    
+    protected ImportColumn importColumn;// add by suman
+  
+    protected IntrospectedColumn IntrospectedImportColumn;// add by suman
     /**
      * Constructs a Column definition. This object holds all the information
      * about a column that is required to generate Java objects and SQL maps;
@@ -106,8 +110,25 @@ public class IntrospectedColumn {
     public void setScale(int scale) {
         this.scale = scale;
     }
+    
 
-    /*
+    public ImportColumn getImportColumn() {
+		return importColumn;
+	}
+
+	public void setImportColumn(ImportColumn importColumn) {
+		this.importColumn = importColumn;
+	}
+
+	public IntrospectedColumn getIntrospectedImportColumn() {
+		return IntrospectedImportColumn;
+	}
+
+	public void setIntrospectedImportColumn(IntrospectedColumn introspectedImportColumn) {
+		IntrospectedImportColumn = introspectedImportColumn;
+	}
+
+	/*
      * This method is primarily used for debugging, so we don't externalize the
      * strings
      */
@@ -301,4 +322,8 @@ public class IntrospectedColumn {
     public void setSequenceColumn(boolean isSequenceColumn) {
         this.isSequenceColumn = isSequenceColumn;
     }
+
+	
+	
+    
 }

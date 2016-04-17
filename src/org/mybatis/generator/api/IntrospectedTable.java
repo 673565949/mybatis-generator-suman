@@ -35,6 +35,7 @@ import org.mybatis.generator.config.PropertyHolder;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.internal.db.ActualTableName;
 import org.mybatis.generator.internal.rules.ConditionalModelRules;
 import org.mybatis.generator.internal.rules.FlatModelRules;
 import org.mybatis.generator.internal.rules.HierarchicalModelRules;
@@ -197,6 +198,9 @@ public abstract class IntrospectedTable {
 
 	/** The blob columns. */
 	protected List<IntrospectedColumn> blobColumns;
+	
+	/** The import columns. */
+	protected List<IntrospectedColumn>  foreignKeyColumns;//add by suman
 
 	/** The target runtime. */
 	protected TargetRuntime targetRuntime;
@@ -212,6 +216,8 @@ public abstract class IntrospectedTable {
 	 * generators.
 	 */
 	protected Map<IntrospectedTable.InternalAttribute, String> internalAttributes;
+	
+	protected ActualTableName actualTableName;//add by suman
 
 	/**
 	 * Instantiates a new introspected table.
@@ -225,6 +231,7 @@ public abstract class IntrospectedTable {
 		primaryKeyColumns = new ArrayList<IntrospectedColumn>();
 		baseColumns = new ArrayList<IntrospectedColumn>();
 		blobColumns = new ArrayList<IntrospectedColumn>();
+		foreignKeyColumns = new ArrayList<IntrospectedColumn>();
 		attributes = new HashMap<String, Object>();
 		internalAttributes = new HashMap<IntrospectedTable.InternalAttribute, String>();
 	}
@@ -402,6 +409,15 @@ public abstract class IntrospectedTable {
 	 */
 	public List<IntrospectedColumn> getBaseColumns() {
 		return baseColumns;
+	}
+	
+	/**
+	 * Gets the import columns.
+	 * 
+	 * @return the import columns
+	 */
+	public List<IntrospectedColumn> getForeignKeyColumns() {
+		return foreignKeyColumns;
 	}
 
 	/**
@@ -664,7 +680,11 @@ public abstract class IntrospectedTable {
 		} else {
 			baseColumns.add(introspectedColumn);
 		}
-
+		//add by suman
+		if(introspectedColumn.getImportColumn()!=null){
+			foreignKeyColumns.add(introspectedColumn);
+		}
+		// add by suman
 		introspectedColumn.setIntrospectedTable(this);
 	}
 
@@ -1762,4 +1782,14 @@ public abstract class IntrospectedTable {
 	public Context getContext() {
 		return context;
 	}
+
+	public ActualTableName getActualTableName() {
+		return actualTableName;
+	}
+
+	public void setActualTableName(ActualTableName actualTableName) {
+		this.actualTableName = actualTableName;
+	}
+	
+	
 }

@@ -23,12 +23,16 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
+import org.mybatis.generator.api.ImportColumn;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -39,6 +43,7 @@ import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.PluginAggregator;
+import org.mybatis.generator.internal.db.ActualTableName;
 import org.mybatis.generator.internal.db.ConnectionFactory;
 import org.mybatis.generator.internal.db.DatabaseIntrospector;
 
@@ -609,6 +614,9 @@ public class Context extends PropertyHolder {
             throws SQLException, InterruptedException {
 
         introspectedTables = new ArrayList<IntrospectedTable>();
+        // add by suman start
+        Map<ActualTableName, IntrospectedTable> introspectedTableMap = new HashMap<ActualTableName, IntrospectedTable>();
+        // add by suman end
         JavaTypeResolver javaTypeResolver = ObjectFactory.createJavaTypeResolver(this, warnings);
 
         Connection connection = null;
@@ -635,13 +643,42 @@ public class Context extends PropertyHolder {
 
                 callback.startTask(getString("Progress.1", tableName)); //$NON-NLS-1$
                 List<IntrospectedTable> tables = databaseIntrospector.introspectTables(tc);
-
+                
                 if (tables != null) {
                     introspectedTables.addAll(tables);
+                    // add by suman start
+                    for (IntrospectedTable introspectedTable : tables) {
+                    	introspectedTableMap.put(introspectedTable.getActualTableName(), introspectedTable);
+					}
+                    // add by suman end
                 }
+               
 
                 callback.checkCancel();
             }
+            //add by suman start
+            
+            for (IntrospectedTable introspectedTable : introspectedTables) {//遍历所有的表
+				List<IntrospectedColumn> foreignKeyColumns = introspectedTable.getForeignKeyColumns();//得到表的外键列
+				if(foreignKeyColumns == null) continue;//如果没有外键列 跳过
+				for (IntrospectedColumn foreignKeyColumn : foreignKeyColumns) {//遍历外键列
+					ImportColumn importColumn = foreignKeyColumn.getImportColumn();//得到外键列对应的引入列
+					if(importColumn == null) continue;
+					ActualTableName importTable = importColumn.getImportTable();//得到引入表
+					if(importTable == null) continue;
+					IntrospectedTable importIntrospectedTable = introspectedTableMap.get(importTable);//得到引入表对象
+					List<IntrospectedColumn> allColumns = importIntrospectedTable.getAllColumns();//遍历引入表的列
+					for (IntrospectedColumn importTableColumn : allColumns) {
+						if(importTableColumn.getActualColumnName().equals(importColumn.getImportColumnName())){
+							foreignKeyColumn.setIntrospectedImportColumn(importTableColumn);//给外键列 设置引入列
+							System.out.println(importIntrospectedTable+" "+importTableColumn);
+						}
+					}
+				}
+            	
+			}
+            //add by suman end
+            
         } finally {
             closeConnection(connection);
         }

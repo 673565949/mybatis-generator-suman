@@ -5,7 +5,7 @@
 <generatorConfiguration>
 <!-- 数据库驱动 -->
 	 <classPathEntry	location="libs/mysql-connector-java-5.1.5-bin.jar"/>
-	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="hierarchical" >
+	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="flat" >
 		<property name="autoDelimitKeywords" value="true"/>
 		<property name="beginningDelimiter" value="`"/>
 		<property name="endingDelimiter" value="`"/>
@@ -43,7 +43,7 @@
 			 <columnOverride column="leaf" javaType="java.lang.Integer" ></columnOverride>
 			 <columnOverride column="sort_index" javaType="java.lang.Integer" ></columnOverride>
 		</table>
-		<table tableName="role" alias="role" domainObjectName="Role">
+		<table tableName="role" alias="role" domainObjectName="Role" >
 			 <generatedKey column="id" sqlStatement="JDBC"/>
 		</table>
 		<table tableName="role_module" alias="role_module" domainObjectName="RoleModule">
