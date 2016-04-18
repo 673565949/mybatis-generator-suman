@@ -18,6 +18,7 @@ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 import java.util.Iterator;
 
 import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
@@ -30,43 +31,68 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
  */
 public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator {
 
-    public BaseColumnListElementGenerator() {
-        super();
-    }
+	public BaseColumnListElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("sql");
 
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                introspectedTable.getBaseColumnListId()));
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseColumnListId()));
 
-        context.getCommentGenerator().addComment(answer);
+		context.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        Iterator<IntrospectedColumn> iter = introspectedTable
-                .getNonBLOBColumns().iterator();
-        while (iter.hasNext()) {
-            sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(iter
-                    .next()));
+		StringBuilder sb = new StringBuilder();
+		Iterator<IntrospectedColumn> iter = introspectedTable.getNonBLOBColumns().iterator();
+		while (iter.hasNext()) {
+			sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(iter.next()));
 
-            if (iter.hasNext()) {
-                sb.append(", "); //$NON-NLS-1$
-            }
+			if (iter.hasNext()) {
+				sb.append(", ");
+			}
 
-            if (sb.length() > 80) {
-                answer.addElement(new TextElement(sb.toString()));
-                sb.setLength(0);
-            }
-        }
+			if (sb.length() > 80) {
+				answer.addElement(new TextElement(sb.toString()));
+				sb.setLength(0);
+			}
+		}
 
-        if (sb.length() > 0) {
-            answer.addElement((new TextElement(sb.toString())));
-        }
+		if (sb.length() > 0) {
+			answer.addElement((new TextElement(sb.toString())));
+			
+			//add by suman start
+				iter = introspectedTable.getNonBLOBColumns().iterator();
+				while (iter.hasNext()) {
+					IntrospectedColumn column = iter.next();
+					/*<trim prefix=",">
+		    			<include refid="com.perfect.trains.mapper.ManufacturerMapper.Base_Column_List"></include>
+			    	</trim>
+					*/
+					IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
+					if(introspectedImportColumn==null){
+						continue;
+					}
+					IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+					
+					XmlElement trim = new XmlElement("trim");
+					trim.addAttribute(new Attribute("prefix", ","));
+					answer.addElement(trim);
+					
+					
+					XmlElement include = new XmlElement("include");
+					include.addAttribute(new Attribute("refid", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseColumnListId()));
+					trim.addElement(include);
+					
 
-        if (context.getPlugins().sqlMapBaseColumnListElementGenerated(
-                answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+				}
+			
+			//add by sulman
+		}
+		
+		
+		if (context.getPlugins().sqlMapBaseColumnListElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+	}
 }
