@@ -99,6 +99,7 @@ public class XmlElement extends Element {
      *            the element
      */
     public void addElement(Element element) {
+    	if(element == null) return;// add by suman
         elements.add(element);
     }
 

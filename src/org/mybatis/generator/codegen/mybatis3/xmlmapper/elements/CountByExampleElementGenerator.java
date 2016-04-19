@@ -48,6 +48,7 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
         sb.append(introspectedTable
                 .getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(getLeftJoinIncludeElement());
         answer.addElement(getExampleIncludeElement());
 
         if (context.getPlugins().sqlMapCountByExampleElementGenerated(

@@ -204,7 +204,7 @@ public abstract class IntrospectedTable {
 	/** The blob columns. */
 	protected List<IntrospectedColumn> blobColumns;
 	
-	/** The import columns. */
+	/** The foreignKeyColumns columns. */
 	protected List<IntrospectedColumn>  foreignKeyColumns;//add by suman
 
 	/** The target runtime. */
@@ -1802,7 +1802,7 @@ public abstract class IntrospectedTable {
 	public Context getContext() {
 		return context;
 	}
-
+	// add by suman start
 	public ActualTableName getActualTableName() {
 		return actualTableName;
 	}
@@ -1810,6 +1810,6 @@ public abstract class IntrospectedTable {
 	public void setActualTableName(ActualTableName actualTableName) {
 		this.actualTableName = actualTableName;
 	}
-	
+	// add by suman end
 	
 }

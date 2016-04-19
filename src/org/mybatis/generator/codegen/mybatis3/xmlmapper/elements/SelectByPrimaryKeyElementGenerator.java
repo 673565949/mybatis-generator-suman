@@ -89,7 +89,7 @@ public class SelectByPrimaryKeyElementGenerator extends
         sb.append(introspectedTable
                 .getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
-
+        answer.addElement(getLeftJoinIncludeElement());
         boolean and = false;
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getPrimaryKeyColumns()) {

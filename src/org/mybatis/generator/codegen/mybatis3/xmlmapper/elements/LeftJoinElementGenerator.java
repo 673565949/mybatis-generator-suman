@@ -39,7 +39,9 @@ public class LeftJoinElementGenerator extends AbstractXmlElementGenerator {
 			answer.addElement(new TextElement(sb.toString()));
 
 		}
-	
+		if(answer.getElements() == null || answer.getElements().isEmpty()){
+			return;
+		}
 		
 		context.getCommentGenerator().addComment(answer);
 		if (context.getPlugins().sqlMapLeftJoinElementGenerated(answer, introspectedTable)) {

@@ -28,75 +28,75 @@ import org.mybatis.generator.config.GeneratedKey;
  * 
  */
 public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
-    public abstract void addElements(XmlElement parentElement);
+	public abstract void addElements(XmlElement parentElement);
 
-    public AbstractXmlElementGenerator() {
-        super();
-    }
+	public AbstractXmlElementGenerator() {
+		super();
+	}
 
-    /**
-     * This method should return an XmlElement for the select key used to
-     * automatically generate keys.
-     * 
-     * @param introspectedColumn
-     *            the column related to the select key statement
-     * @param generatedKey
-     *            the generated key for the current table
-     * @return the selectKey element
-     */
-    protected XmlElement getSelectKey(IntrospectedColumn introspectedColumn,
-            GeneratedKey generatedKey) {
-        String identityColumnType = introspectedColumn
-                .getFullyQualifiedJavaType().getFullyQualifiedName();
+	/**
+	 * This method should return an XmlElement for the select key used to
+	 * automatically generate keys.
+	 * 
+	 * @param introspectedColumn
+	 *            the column related to the select key statement
+	 * @param generatedKey
+	 *            the generated key for the current table
+	 * @return the selectKey element
+	 */
+	protected XmlElement getSelectKey(IntrospectedColumn introspectedColumn, GeneratedKey generatedKey) {
+		String identityColumnType = introspectedColumn.getFullyQualifiedJavaType().getFullyQualifiedName();
 
-        XmlElement answer = new XmlElement("selectKey"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("resultType", identityColumnType)); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "keyProperty", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("order", //$NON-NLS-1$
-                generatedKey.getMyBatis3Order())); 
-        
-        answer.addElement(new TextElement(generatedKey
-                        .getRuntimeSqlStatement()));
+		XmlElement answer = new XmlElement("selectKey");
+		answer.addAttribute(new Attribute("resultType", identityColumnType));
+		answer.addAttribute(new Attribute("keyProperty", introspectedColumn.getJavaProperty()));
+		answer.addAttribute(new Attribute("order", generatedKey.getMyBatis3Order()));
 
-        return answer;
-    }
+		answer.addElement(new TextElement(generatedKey.getRuntimeSqlStatement()));
 
-    protected XmlElement getBaseColumnListElement() {
-        XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getBaseColumnListId()));
-        return answer;
-    }
+		return answer;
+	}
 
-    protected XmlElement getBlobColumnListElement() {
-        XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getBlobColumnListId()));
-        return answer;
-    }
+	protected XmlElement getBaseColumnListElement() {
+		XmlElement answer = new XmlElement("include");
+		answer.addAttribute(new Attribute("refid", introspectedTable.getBaseColumnListId()));
+		return answer;
+	}
 
-    protected XmlElement getExampleIncludeElement() {
-        XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
-        ifElement.addAttribute(new Attribute("test", "_parameter != null")); //$NON-NLS-1$ //$NON-NLS-2$
+	protected XmlElement getBlobColumnListElement() {
+		XmlElement answer = new XmlElement("include");
+		answer.addAttribute(new Attribute("refid", introspectedTable.getBlobColumnListId()));
+		return answer;
+	}
 
-        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
-        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getExampleWhereClauseId()));
-        ifElement.addElement(includeElement);
+	protected XmlElement getExampleIncludeElement() {
+		XmlElement ifElement = new XmlElement("if");
+		ifElement.addAttribute(new Attribute("test", "_parameter != null"));
 
-        return ifElement;
-    }
+		XmlElement includeElement = new XmlElement("include");
+		includeElement.addAttribute(new Attribute("refid", introspectedTable.getExampleWhereClauseId()));
+		ifElement.addElement(includeElement);
 
-    protected XmlElement getUpdateByExampleIncludeElement() {
-        XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
-        ifElement.addAttribute(new Attribute("test", "_parameter != null")); //$NON-NLS-1$ //$NON-NLS-2$
+		return ifElement;
+	}
 
-        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
-        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getMyBatis3UpdateByExampleWhereClauseId()));
-        ifElement.addElement(includeElement);
+	protected XmlElement getLeftJoinIncludeElement() {
+		if(introspectedTable.getForeignKeyColumns()==null||introspectedTable.getForeignKeyColumns().isEmpty()){
+			return null;
+		}
+		XmlElement includeElement = new XmlElement("include");
+		includeElement.addAttribute(new Attribute("refid", introspectedTable.getLeftJoinListId()));
 
-        return ifElement;
-    }
+		return includeElement;
+	}
+
+	protected XmlElement getUpdateByExampleIncludeElement() {
+		XmlElement ifElement = new XmlElement("if");
+		ifElement.addAttribute(new Attribute("test", "_parameter != null"));
+		XmlElement includeElement = new XmlElement("include");
+		includeElement.addAttribute(new Attribute("refid", introspectedTable.getMyBatis3UpdateByExampleWhereClauseId()));
+		ifElement.addElement(includeElement);
+
+		return ifElement;
+	}
 }

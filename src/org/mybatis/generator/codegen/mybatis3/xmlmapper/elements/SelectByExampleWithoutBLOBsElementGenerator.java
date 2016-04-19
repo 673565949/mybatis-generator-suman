@@ -68,6 +68,7 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends
         sb.append(introspectedTable
                 .getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement((new TextElement(sb.toString())));
+        answer.addElement(getLeftJoinIncludeElement());
         answer.addElement(getExampleIncludeElement());
 
         ifElement = new XmlElement("if"); //$NON-NLS-1$
