@@ -32,6 +32,7 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteByPrimary
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ExampleWhereClauseElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertSelectiveElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.LeftJoinElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithoutBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithBLOBsElementGenerator;
@@ -67,6 +68,7 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
 
 		addResultMapWithoutBLOBsElement(answer);// 添加没有BLOBs对象的ResultMap标签
 		addResultMapWithBLOBsElement(answer);// 添加有BLOBs对象的ResultMap标签
+		addLeftJoinElement(answer);
 		addExampleWhereClauseElement(answer);
 		addMyBatis3UpdateByExampleWhereClauseElement(answer);
 		addBaseColumnListElement(answer);
@@ -87,6 +89,14 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
 		addUpdateByPrimaryKeyWithoutBLOBsElement(answer);
 
 		return answer;
+	}
+
+	private void addLeftJoinElement(XmlElement parentElement) {
+		if (introspectedTable.getRules().generateLeftJoin()) {
+			AbstractXmlElementGenerator elementGenerator = new LeftJoinElementGenerator();//
+			initializeAndExecuteGenerator(elementGenerator, parentElement);
+		}
+		
 	}
 
 	protected void addResultMapWithoutBLOBsElement(XmlElement parentElement) {

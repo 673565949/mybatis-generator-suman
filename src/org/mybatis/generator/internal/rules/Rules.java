@@ -247,4 +247,6 @@ public interface Rules {
     boolean generateJavaClient();
 
     IntrospectedTable getIntrospectedTable();
+
+	boolean generateLeftJoin();
 }

@@ -76,4 +76,10 @@ public class ConditionalModelRules extends BaseRules {
         return otherColumnCount > 1
                 && introspectedTable.getBLOBColumns().size() > 1;
     }
+
+	@Override
+	public boolean generateLeftJoin() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

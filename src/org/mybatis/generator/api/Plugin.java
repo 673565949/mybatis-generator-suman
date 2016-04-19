@@ -1260,6 +1260,15 @@ public interface Plugin {
      */
     boolean sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element,
             IntrospectedTable introspectedTable);
+    
+    
+    
+    
+    // add by suman start
+    
+    boolean sqlMapLeftJoinElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable);
+    // add by suman end
 
     /**
      * This method is called when the updateByExampleSelective element is

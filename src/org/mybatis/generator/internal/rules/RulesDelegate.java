@@ -172,4 +172,10 @@ public class RulesDelegate implements Rules {
     public boolean generateJavaClient() {
         return rules.generateJavaClient();
     }
+
+	@Override
+	public boolean generateLeftJoin() {
+		// TODO Auto-generated method stub
+		return rules.generateLeftJoin();
+	}
 }

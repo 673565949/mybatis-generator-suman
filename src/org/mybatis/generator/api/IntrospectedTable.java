@@ -167,7 +167,12 @@ public abstract class IntrospectedTable {
 
 		/** The attr base column list id. */
 		ATTR_BASE_COLUMN_LIST_ID,
+		
+		// add by suman start
+		ATTR_LEFT_JOIN_LIST_ID,
+		// add by suman end
 
+		
 		/** The attr blob column list id. */
 		ATTR_BLOB_COLUMN_LIST_ID,
 
@@ -809,6 +814,7 @@ public abstract class IntrospectedTable {
 		setResultMapWithBLOBsId("ResultMapWithBLOBs"); //$NON-NLS-1$
 		setExampleWhereClauseId("Example_Where_Clause"); //$NON-NLS-1$
 		setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
+		setLeftJoinId("Left_Join_List"); //$NON-NLS-1$
 		setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
 		setMyBatis3UpdateByExampleWhereClauseId("Update_By_Example_Where_Clause"); //$NON-NLS-1$
 	}
@@ -832,6 +838,13 @@ public abstract class IntrospectedTable {
 	public void setBaseColumnListId(String s) {
 		internalAttributes.put(InternalAttribute.ATTR_BASE_COLUMN_LIST_ID, s);
 	}
+	
+	// add by suman start
+	public void setLeftJoinId(String s) {
+		internalAttributes.put(InternalAttribute.ATTR_LEFT_JOIN_LIST_ID, s);
+	}
+	
+	// add by suman end
 
 	/**
 	 * Sets the example where clause id.
@@ -1077,6 +1090,13 @@ public abstract class IntrospectedTable {
 		return internalAttributes.get(InternalAttribute.ATTR_BASE_RESULT_MAP_ID);
 	}
 
+	// add by suman start
+	public String getLeftJoinListId() {
+		return internalAttributes.get(InternalAttribute.ATTR_LEFT_JOIN_LIST_ID);
+	}
+
+	// add by suman end
+	
 	/**
 	 * Gets the update by primary key with blo bs statement id.
 	 * 

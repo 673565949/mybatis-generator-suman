@@ -62,6 +62,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 			answer.addElement((new TextElement(sb.toString())));
 			
 			//add by suman start
+			if (introspectedTable.getRules().generateLeftJoin()){
 				iter = introspectedTable.getNonBLOBColumns().iterator();
 				while (iter.hasNext()) {
 					IntrospectedColumn column = iter.next();
@@ -86,7 +87,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 					
 
 				}
-			
+			}
 			//add by sulman
 		}
 		

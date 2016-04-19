@@ -251,6 +251,7 @@ public abstract class PluginAdapter implements Plugin {
         return true;
     }
 
+   
     public boolean modelSetterMethodGenerated(Method method,
             TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
             IntrospectedTable introspectedTable,
@@ -376,6 +377,13 @@ public abstract class PluginAdapter implements Plugin {
         return true;
     }
 
+    // add by suman start
+    
+    public boolean sqlMapLeftJoinElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable){
+    	return true;
+    }
+    // add by suman end
     public boolean providerGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
         return true;

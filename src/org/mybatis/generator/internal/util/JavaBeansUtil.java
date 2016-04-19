@@ -32,282 +32,328 @@ import org.mybatis.generator.config.PropertyRegistry;
 
 /**
  * The Class JavaBeansUtil.
- *
+ * 
  * @author Jeff Butler
  */
 public class JavaBeansUtil {
 
-    /**
-     * Instantiates a new java beans util.
-     */
-    private JavaBeansUtil() {
-        super();
-    }
+	/**
+	 * Instantiates a new java beans util.
+	 */
+	private JavaBeansUtil() {
+		super();
+	}
 
-    /**
-     * JavaBeans rules:
-     * 
-     * eMail &gt; geteMail() firstName &gt; getFirstName() URL $gt; getURL() XAxis &gt; getXAxis() a &gt; getA() B &gt;
-     * invalid - this method assumes that this is not the case. Call getValidPropertyName first. Yaxis &gt; invalid -
-     * this method assumes that this is not the case. Call getValidPropertyName first.
-     *
-     * @param property
-     *            the property
-     * @param fullyQualifiedJavaType
-     *            the fully qualified java type
-     * @return the getter method name
-     */
-    public static String getGetterMethodName(String property,
-            FullyQualifiedJavaType fullyQualifiedJavaType) {
-        StringBuilder sb = new StringBuilder();
+	/**
+	 * JavaBeans rules:
+	 * 
+	 * eMail &gt; geteMail() firstName &gt; getFirstName() URL $gt; getURL()
+	 * XAxis &gt; getXAxis() a &gt; getA() B &gt; invalid - this method assumes
+	 * that this is not the case. Call getValidPropertyName first. Yaxis &gt;
+	 * invalid - this method assumes that this is not the case. Call
+	 * getValidPropertyName first.
+	 * 
+	 * @param property
+	 *            the property
+	 * @param fullyQualifiedJavaType
+	 *            the fully qualified java type
+	 * @return the getter method name
+	 */
+	public static String getGetterMethodName(String property, FullyQualifiedJavaType fullyQualifiedJavaType) {
+		StringBuilder sb = new StringBuilder();
 
-        sb.append(property);
-        if (Character.isLowerCase(sb.charAt(0))) {
-            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
-                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-            }
-        }
+		sb.append(property);
+		if (Character.isLowerCase(sb.charAt(0))) {
+			if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
+				sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+			}
+		}
 
-        if (fullyQualifiedJavaType.equals(FullyQualifiedJavaType
-                .getBooleanPrimitiveInstance())) {
-            sb.insert(0, "is"); //$NON-NLS-1$
-        } else {
-            sb.insert(0, "get"); //$NON-NLS-1$
-        }
+		if (fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getBooleanPrimitiveInstance())) {
+			sb.insert(0, "is"); //$NON-NLS-1$
+		} else {
+			sb.insert(0, "get"); //$NON-NLS-1$
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * JavaBeans rules:
-     * 
-     * eMail &gt; seteMail() firstName &gt; setFirstName() URL &gt; setURL() XAxis &gt; setXAxis() a &gt; setA() B &gt;
-     * invalid - this method assumes that this is not the case. Call getValidPropertyName first. Yaxis &gt; invalid -
-     * this method assumes that this is not the case. Call getValidPropertyName first.
-     *
-     * @param property
-     *            the property
-     * @return the setter method name
-     */
-    public static String getSetterMethodName(String property) {
-        StringBuilder sb = new StringBuilder();
+	/**
+	 * JavaBeans rules:
+	 * 
+	 * eMail &gt; seteMail() firstName &gt; setFirstName() URL &gt; setURL()
+	 * XAxis &gt; setXAxis() a &gt; setA() B &gt; invalid - this method assumes
+	 * that this is not the case. Call getValidPropertyName first. Yaxis &gt;
+	 * invalid - this method assumes that this is not the case. Call
+	 * getValidPropertyName first.
+	 * 
+	 * @param property
+	 *            the property
+	 * @return the setter method name
+	 */
+	public static String getSetterMethodName(String property) {
+		StringBuilder sb = new StringBuilder();
 
-        sb.append(property);
-        if (Character.isLowerCase(sb.charAt(0))) {
-            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
-                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-            }
-        }
+		sb.append(property);
+		if (Character.isLowerCase(sb.charAt(0))) {
+			if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
+				sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+			}
+		}
 
-        sb.insert(0, "set"); //$NON-NLS-1$
+		sb.insert(0, "set"); //$NON-NLS-1$
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * 将字符串转换为驼峰标示的字符串.
-     *
-     * @param inputString
-     *            the input string
-     * @param firstCharacterUppercase
-     *            the first character uppercase
-     * @return the camel case string
-     */
-    public static String getCamelCaseString(String inputString,
-            boolean firstCharacterUppercase) {
-        StringBuilder sb = new StringBuilder();
+	/**
+	 * 将字符串转换为驼峰标示的字符串.
+	 * 
+	 * @param inputString
+	 *            the input string
+	 * @param firstCharacterUppercase
+	 *            the first character uppercase
+	 * @return the camel case string
+	 */
+	public static String getCamelCaseString(String inputString, boolean firstCharacterUppercase) {
+		StringBuilder sb = new StringBuilder();
 
-        boolean nextUpperCase = false;
-        for (int i = 0; i < inputString.length(); i++) {
-            char c = inputString.charAt(i);
+		boolean nextUpperCase = false;
+		for (int i = 0; i < inputString.length(); i++) {
+			char c = inputString.charAt(i);
 
-            switch (c) {
-            case '_':
-            case '-':
-            case '@':
-            case '$':
-            case '#':
-            case ' ':
-            case '/':
-            case '&':
-                if (sb.length() > 0) {
-                    nextUpperCase = true;
-                }
-                break;
+			switch (c) {
+			case '_':
+			case '-':
+			case '@':
+			case '$':
+			case '#':
+			case ' ':
+			case '/':
+			case '&':
+				if (sb.length() > 0) {
+					nextUpperCase = true;
+				}
+				break;
 
-            default:
-                if (nextUpperCase) {
-                    sb.append(Character.toUpperCase(c));
-                    nextUpperCase = false;
-                } else {
-                    sb.append(Character.toLowerCase(c));
-                }
-                break;
-            }
-        }
+			default:
+				if (nextUpperCase) {
+					sb.append(Character.toUpperCase(c));
+					nextUpperCase = false;
+				} else {
+					sb.append(Character.toLowerCase(c));
+				}
+				break;
+			}
+		}
 
-        if (firstCharacterUppercase) {
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        }
+		if (firstCharacterUppercase) {
+			sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * This method ensures that the specified input string is a valid Java property name. The rules are as follows:
-     * 
-     * 1. If the first character is lower case, then OK 2. If the first two characters are upper case, then OK 3. If the
-     * first character is upper case, and the second character is lower case, then the first character should be made
-     * lower case
-     * 
-     * eMail &gt; eMail firstName &gt; firstName URL &gt; URL XAxis &gt; XAxis a &gt; a B &gt; b Yaxis &gt; yaxis
-     *
-     * @param inputString
-     *            the input string
-     * @return the valid property name
-     */
-    public static String getValidPropertyName(String inputString) {
-        String answer;
+	/**
+	 * This method ensures that the specified input string is a valid Java
+	 * property name. The rules are as follows:
+	 * 
+	 * 1. If the first character is lower case, then OK 2. If the first two
+	 * characters are upper case, then OK 3. If the first character is upper
+	 * case, and the second character is lower case, then the first character
+	 * should be made lower case
+	 * 
+	 * eMail &gt; eMail firstName &gt; firstName URL &gt; URL XAxis &gt; XAxis a
+	 * &gt; a B &gt; b Yaxis &gt; yaxis
+	 * 
+	 * @param inputString
+	 *            the input string
+	 * @return the valid property name
+	 */
+	public static String getValidPropertyName(String inputString) {
+		String answer;
 
-        if (inputString == null) {
-            answer = null;
-        } else if (inputString.length() < 2) {
-            answer = inputString.toLowerCase(Locale.US);
-        } else {
-            if (Character.isUpperCase(inputString.charAt(0))
-                    && !Character.isUpperCase(inputString.charAt(1))) {//如果首字母大写 第二个字母小写
-                answer = inputString.substring(0, 1).toLowerCase(Locale.US)//修改为首字母小写 其他不变
-                        + inputString.substring(1);
-            } else {
-                answer = inputString;
-            }
-        }
+		if (inputString == null) {
+			answer = null;
+		} else if (inputString.length() < 2) {
+			answer = inputString.toLowerCase(Locale.US);
+		} else {
+			if (Character.isUpperCase(inputString.charAt(0)) && !Character.isUpperCase(inputString.charAt(1))) {// 如果首字母大写
+																												// 第二个字母小写
+				answer = inputString.substring(0, 1).toLowerCase(Locale.US)// 修改为首字母小写
+																			// 其他不变
+						+ inputString.substring(1);
+			} else {
+				answer = inputString;
+			}
+		}
 
-        return answer;
-    }
+		return answer;
+	}
 
-    /**
-     * Gets the java beans getter.
-     *
-     * @param introspectedColumn
-     *            the introspected column
-     * @param context
-     *            the context
-     * @param introspectedTable
-     *            the introspected table
-     * @return the java beans getter
-     */
-    public static Method getJavaBeansGetter(IntrospectedColumn introspectedColumn,
-            Context context,
-            IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+	/**
+	 * Gets the java beans getter.
+	 * 
+	 * @param introspectedColumn
+	 *            the introspected column
+	 * @param context
+	 *            the context
+	 * @param introspectedTable
+	 *            the introspected table
+	 * @return the java beans getter
+	 */
+	public static Method getJavaBeansGetter(IntrospectedColumn introspectedColumn, Context context, IntrospectedTable introspectedTable) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
 
-        Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(fqjt);
-        method.setName(getGetterMethodName(property, fqjt));
-        context.getCommentGenerator().addGetterComment(method,
-                introspectedTable, introspectedColumn);
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(fqjt);
+		method.setName(getGetterMethodName(property, fqjt));
+		context.getCommentGenerator().addGetterComment(method, introspectedTable, introspectedColumn);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("return "); //$NON-NLS-1$
-        sb.append(property);
-        sb.append(';');
-        method.addBodyLine(sb.toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append("return "); //$NON-NLS-1$
+		sb.append(property);
+		sb.append(';');
+		method.addBodyLine(sb.toString());
 
-        return method;
-    }
+		return method;
+	}
 
-    /**
-     * Gets the java beans field.
-     *
-     * @param introspectedColumn
-     *            the introspected column
-     * @param context
-     *            the context
-     * @param introspectedTable
-     *            the introspected table
-     * @return the java beans field
-     */
-    public static Field getJavaBeansField(IntrospectedColumn introspectedColumn,
-            Context context,
-            IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+	/**
+	 * Gets the java beans field.
+	 * 
+	 * @param introspectedColumn
+	 *            the introspected column
+	 * @param context
+	 *            the context
+	 * @param introspectedTable
+	 *            the introspected table
+	 * @return the java beans field
+	 */
+	public static Field getJavaBeansField(IntrospectedColumn introspectedColumn, Context context, IntrospectedTable introspectedTable) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
+		Field field = new Field();
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(fqjt);
+		field.setName(property);
+		context.getCommentGenerator().addFieldComment(field, introspectedTable, introspectedColumn);
 
-        Field field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(fqjt);
-        field.setName(property);
-        context.getCommentGenerator().addFieldComment(field,
-                introspectedTable, introspectedColumn);
+		return field;
+	}
 
-        return field;
-    }
+	/**
+	 * Gets the java beans setter.
+	 * 
+	 * @param introspectedColumn
+	 *            the introspected column
+	 * @param context
+	 *            the context
+	 * @param introspectedTable
+	 *            the introspected table
+	 * @return the java beans setter
+	 */
+	public static Method getJavaBeansSetter(IntrospectedColumn introspectedColumn, Context context, IntrospectedTable introspectedTable) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
 
-    /**
-     * Gets the java beans setter.
-     *
-     * @param introspectedColumn
-     *            the introspected column
-     * @param context
-     *            the context
-     * @param introspectedTable
-     *            the introspected table
-     * @return the java beans setter
-     */
-    public static Method getJavaBeansSetter(IntrospectedColumn introspectedColumn,
-            Context context,
-            IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName(getSetterMethodName(property));
+		method.addParameter(new Parameter(fqjt, property));
+		context.getCommentGenerator().addSetterComment(method, introspectedTable, introspectedColumn);
 
-        Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setName(getSetterMethodName(property));
-        method.addParameter(new Parameter(fqjt, property));
-        context.getCommentGenerator().addSetterComment(method,
-                introspectedTable, introspectedColumn);
+		StringBuilder sb = new StringBuilder();
+		if (isTrimStringsEnabled(context) && introspectedColumn.isStringColumn()) {
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" == null ? null : "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(".trim();"); //$NON-NLS-1$
+			method.addBodyLine(sb.toString());
+		} else {
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+		}
 
-        StringBuilder sb = new StringBuilder();
-        if (isTrimStringsEnabled(context) && introspectedColumn.isStringColumn()) {
-            sb.append("this."); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" == null ? null : "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(".trim();"); //$NON-NLS-1$
-            method.addBodyLine(sb.toString());
-        } else {
-            sb.append("this."); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(';');
-            method.addBodyLine(sb.toString());
-        }
+		return method;
+	}
+	// add by suman start
+	public static Method getImportJavaBeansSetter(IntrospectedColumn introspectedColumn, Context context) {
+		IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
+		if(introspectedImportColumn == null ){
+			return null;
+		}
+		
+		IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
+		String property = getValidPropertyName(importType.getShortName());
 
-        return method;
-    }
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName(getSetterMethodName(property));
+		method.addParameter(new Parameter(importType, property));
+		context.getCommentGenerator().addSetterComment(method, introspectedImportTable, introspectedColumn);
 
-    /**
-     * Checks if is trim strings enabled.
-     *
-     * @param context
-     *            the context
-     * @return true, if is trim strings enabled
-     */
-    private static boolean isTrimStringsEnabled(Context context) {
-        Properties properties = context
-                .getJavaModelGeneratorConfiguration().getProperties();
-        boolean rc = isTrue(properties
-                .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
-        return rc;
-    }
+		StringBuilder sb = new StringBuilder();
+	
+		sb.append("this."); //$NON-NLS-1$
+		sb.append(property);
+		sb.append(" = "); //$NON-NLS-1$
+		sb.append(property);
+		sb.append(';');
+		method.addBodyLine(sb.toString());
+	
+
+		return method;
+	}
+	
+	public static Method getImportJavaBeansGetter(IntrospectedColumn introspectedColumn, Context context) {
+		IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
+		if(introspectedImportColumn == null ){
+			return null;
+		}
+		
+		IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
+		String property = getValidPropertyName(importType.getShortName());
+
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(importType);
+		method.setName(getGetterMethodName(property, importType));
+		context.getCommentGenerator().addGetterComment(method, introspectedImportTable, introspectedColumn);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("return "); //$NON-NLS-1$
+		sb.append(property);
+		sb.append(';');
+		method.addBodyLine(sb.toString());
+
+		return method;
+	}
+
+	// add by suman end
+
+	/**
+	 * Checks if is trim strings enabled.
+	 * 
+	 * @param context
+	 *            the context
+	 * @return true, if is trim strings enabled
+	 */
+	private static boolean isTrimStringsEnabled(Context context) {
+		Properties properties = context.getJavaModelGeneratorConfiguration().getProperties();
+		boolean rc = isTrue(properties.getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
+		return rc;
+	}
 
 }

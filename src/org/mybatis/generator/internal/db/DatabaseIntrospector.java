@@ -321,8 +321,7 @@ public class DatabaseIntrospector {
 				} else {// 如果无法通过jdbc类型可以找到对应的jdbc类型
 					// type cannot be resolved. Check for ignored or overridden
 					boolean warn = true;
-					if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {// 如果这个列是需要忽略的
-																						// 那么设置为false
+					if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {// 如果这个列是需要忽略的															// 那么设置为false
 						warn = false;
 					}
 

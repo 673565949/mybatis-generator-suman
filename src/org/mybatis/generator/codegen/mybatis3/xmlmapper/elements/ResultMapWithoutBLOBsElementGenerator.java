@@ -66,7 +66,9 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 		} else {
 			addResultMapElements(answer);
 		}
-		addResultMapAssociationElements(answer);
+		if (introspectedTable.getRules().generateLeftJoin()){
+			addResultMapAssociationElements(answer);
+		}
 		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
 			parentElement.addElement(answer);
 		}

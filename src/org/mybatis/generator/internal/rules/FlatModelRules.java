@@ -63,4 +63,10 @@ public class FlatModelRules extends BaseRules {
     public boolean generateRecordWithBLOBsClass() {
         return false;
     }
+
+	@Override
+	public boolean generateLeftJoin() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

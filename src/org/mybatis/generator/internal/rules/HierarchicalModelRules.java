@@ -68,4 +68,10 @@ public class HierarchicalModelRules extends BaseRules {
     public boolean generateRecordWithBLOBsClass() {
         return introspectedTable.hasBLOBColumns();
     }
+
+	@Override
+	public boolean generateLeftJoin() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -1192,4 +1192,18 @@ public final class PluginAggregator implements Plugin {
 
         return rc;
     }
+
+	@Override
+	public boolean sqlMapLeftJoinElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+		   boolean rc = true;
+
+	        for (Plugin plugin : plugins) {
+	            if (!plugin.sqlMapLeftJoinElementGenerated(element, introspectedTable)) {
+	                rc = false;
+	                break;
+	            }
+	        }
+
+	        return rc;
+	}
 }
