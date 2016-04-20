@@ -28,6 +28,9 @@ public class LeftJoinElementGenerator extends AbstractXmlElementGenerator {
 				continue;
 			}
 			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			if(introspectedImportTable.equals(introspectedTable)){
+				continue;
+			}
 			StringBuffer sb = new StringBuffer();
 			sb.append("left join ");
 			sb.append(introspectedImportTable.getAliasedFullyQualifiedTableNameAtRuntime());

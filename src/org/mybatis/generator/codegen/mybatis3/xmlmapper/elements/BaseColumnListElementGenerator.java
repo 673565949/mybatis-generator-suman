@@ -75,7 +75,9 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 						continue;
 					}
 					IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
-					
+					if(introspectedImportTable.equals(introspectedTable)){
+						continue;
+					}
 					XmlElement trim = new XmlElement("trim");
 					trim.addAttribute(new Attribute("prefix", ","));
 					answer.addElement(trim);

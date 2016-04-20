@@ -44,7 +44,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 	@Override
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("resultMap");//创建resultMap标签
-		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapId()));//添加属性 id
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapRootId()));//添加属性 id
 
 		String returnType;
 		if (isSimple) {// 如果是简易模式
@@ -66,12 +66,25 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 		} else {
 			addResultMapElements(answer);
 		}
+		
+		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		answer = new XmlElement("resultMap");//创建resultMap标签
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapId()));//添加属性 id
+		answer.addAttribute(new Attribute("type", returnType));
+		answer.addAttribute(new Attribute("extends", introspectedTable.getBaseResultMapRootId()));
+
+		
 		if (introspectedTable.getRules().generateLeftJoin()){
 			addResultMapAssociationElements(answer);
 		}
 		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
 			parentElement.addElement(answer);
 		}
+		
+		
+		
 	}
 
 	private void addResultMapElements(XmlElement answer) {
@@ -156,32 +169,19 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 	private void addResultMapAssociationElements(XmlElement answer) {
 		
 
-		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
 			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
 			if(introspectedImportColumn==null) continue;
 			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			String resultMap = introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId();
+			if(introspectedImportTable.equals(introspectedTable)){
+				 //resultMap = introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapRootId();
+				continue; //同表外键不处理 处理不了啊
+			}
 			XmlElement association = new XmlElement("association");
 			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
 			association.addAttribute(new Attribute("property", getValidPropertyName(type.getShortName())));
-			association.addAttribute(new Attribute("resultMap", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId()));
-
-			answer.addElement(association);
-		}
-
-		List<IntrospectedColumn> columns;
-		if (isSimple) {
-			columns = introspectedTable.getNonPrimaryKeyColumns();
-		} else {
-			columns = introspectedTable.getBaseColumns();
-		}
-		for (IntrospectedColumn introspectedColumn : columns) {
-			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
-			if(introspectedImportColumn==null) continue;
-			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
-			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());
-			XmlElement association = new XmlElement("association");
-			association.addAttribute(new Attribute("property",getValidPropertyName(type.getShortName())));
-			association.addAttribute(new Attribute("resultMap", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId()));
+			association.addAttribute(new Attribute("resultMap",resultMap));
 
 			answer.addElement(association);
 		}
