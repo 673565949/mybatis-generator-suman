@@ -42,7 +42,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		method.setConstructor(true);
 		method.setName(type.getShortName());
 		method.addBodyLine("oredCriteria = new ArrayList<GeneratedCriteria>();");
-		
+		method.addBodyLine("leftJoinTableSet = new HashSet<String>();");// add by suman
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
 
@@ -77,6 +77,22 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		field.setName("distinct");
 		commentGenerator.addFieldComment(field, introspectedTable);
 		topLevelClass.addField(field);
+		
+		// add by suman start
+		field = new Field();
+		field.setVisibility(JavaVisibility.PROTECTED);
+		FullyQualifiedJavaType stringOftableName = FullyQualifiedJavaType.getStringInstance();
+		field.setType(stringOftableName);
+		field.setName("tableName");
+		topLevelClass.addField(field);
+		
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(field.getType());
+		method.setName(getGetterMethodName(field.getName(), field.getType()));
+		method.addBodyLine("return tableName;");
+		topLevelClass.addMethod(method);
+		// add by suman end
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
@@ -111,12 +127,29 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		method.addBodyLine("return oredCriteria;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
+		
+		
+		// add by suman start
+		field = new Field();
+		field.setVisibility(JavaVisibility.PROTECTED);
+
+		FullyQualifiedJavaType fqjtype = new FullyQualifiedJavaType("java.util.Set<String>");
+		field.setType(fqjtype);
+		field.setName("leftJoinTableSet");
+		commentGenerator.addFieldComment(field, introspectedTable);
+		topLevelClass.addField(field);
+		// add by suman end
+		
+		
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("or");
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getGeneratedCriteriaInstance(), "criteria"));
 		method.addBodyLine("oredCriteria.add(criteria);");
+		method.addBodyLine("if(!criteria.getTableName().equals(getTableName())){");
+		method.addBodyLine("leftJoinTableSet.add(criteria.getTableName());");
+		method.addBodyLine("}");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
 
@@ -404,7 +437,11 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		// to generate the dynamic where clause
 		topLevelClass.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 		topLevelClass.addImportedType(FullyQualifiedJavaType.getNewArrayListInstance());
-
+		// add by suman start
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getNewSetInstance());
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getNewHashSetInstance());
+		// add by suman end
+		
 		field = new Field();
 		field.setVisibility(JavaVisibility.PROTECTED);
 		FullyQualifiedJavaType listOfCriterion = new FullyQualifiedJavaType("java.util.List<Criterion>");
@@ -418,6 +455,23 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		method.setName(getGetterMethodName(field.getName(), field.getType()));
 		method.addBodyLine("return criteria;");
 		answer.addMethod(method);
+		
+		// add by suman start
+		field = new Field();
+		field.setVisibility(JavaVisibility.PROTECTED);
+		FullyQualifiedJavaType stringOftableName = FullyQualifiedJavaType.getStringInstance();
+		field.setType(stringOftableName);
+		field.setName("tableName");
+		answer.addField(field);
+		
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(field.getType());
+		method.setName(getGetterMethodName(field.getName(), field.getType()));
+		method.addBodyLine("return tableName;");
+		answer.addMethod(method);
+		// add by suman end
+		
 		
 
 		return answer;

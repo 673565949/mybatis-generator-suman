@@ -325,6 +325,14 @@ public class FullyQualifiedJavaType implements
         return new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
     }
 
+    
+    // add by suman start
+    public static final FullyQualifiedJavaType getNewSetInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.Set"); //$NON-NLS-1$
+    }
+
+    // add by suman end
     /**
      * Gets the new hash map instance.
      *
@@ -344,6 +352,13 @@ public class FullyQualifiedJavaType implements
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.ArrayList"); //$NON-NLS-1$
     }
+    
+    // add by suman start
+    public static final FullyQualifiedJavaType getNewHashSetInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.HashSet"); //$NON-NLS-1$
+    }
+    // add by suman end
 
     /**
      * Gets the new iterator instance.
