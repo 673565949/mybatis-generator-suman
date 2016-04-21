@@ -224,8 +224,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
         topLevelClass.addMethod(method);
 
         // now generate the inner class that holds the AND conditions
-        topLevelClass
-                .addInnerClass(getGeneratedCriteriaInnerClass(topLevelClass));
+        topLevelClass.addInnerClass(getGeneratedCriteriaInnerClass(topLevelClass));
 
         topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass));
 

@@ -96,5 +96,13 @@ public class RenameExampleClassPlugin extends PluginAdapter {
         oldType = matcher.replaceAll(replaceString);
 
         introspectedTable.setExampleType(oldType);
+        
+        oldType = introspectedTable.getBaseExampleType();
+        matcher = pattern.matcher(oldType);
+        oldType = matcher.replaceAll(replaceString);
+
+        introspectedTable.setBaseExampleType(oldType);
+        
+
     }
 }

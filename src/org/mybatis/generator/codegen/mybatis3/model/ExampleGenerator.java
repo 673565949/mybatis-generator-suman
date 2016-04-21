@@ -58,6 +58,8 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getExampleType());
 		TopLevelClass topLevelClass = new TopLevelClass(type);
 		topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+		FullyQualifiedJavaType superType = new FullyQualifiedJavaType(context.getBaseExampleName());
+		topLevelClass.setSuperClass(superType);
 		commentGenerator.addJavaFileComment(topLevelClass);
 
 		// add default constructor
@@ -128,13 +130,13 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		commentGenerator.addFieldComment(field, introspectedTable);
 		topLevelClass.addField(field);
 
-		method = new Method();
+	/*	method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setReturnType(fqjt);
 		method.setName("getOredCriteria");
 		method.addBodyLine("return oredCriteria;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
-		topLevelClass.addMethod(method);
+		topLevelClass.addMethod(method);*/
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
@@ -185,11 +187,14 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		topLevelClass.addMethod(method);
 
 		// now generate the inner class that holds the AND conditions
-		topLevelClass.addInnerClass(getGeneratedCriteriaInnerClass(topLevelClass));
-
 		topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass));
 
-		topLevelClass.addInnerClass(getCriterionInnerClass(topLevelClass));
+		//topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass));
+
+		//topLevelClass.addInnerClass(getCriterionInnerClass(topLevelClass));
+		
+		topLevelClass.addInnerClass(getColumnContainerClass(topLevelClass));
+		
 
 		List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
 		if (context.getPlugins().modelExampleClassGenerated(topLevelClass, introspectedTable)) {
@@ -198,7 +203,87 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		return answer;
 	}
 
-	private InnerClass getCriterionInnerClass(TopLevelClass topLevelClass) {
+	private InnerClass getColumnContainerClass(TopLevelClass topLevelClass) {
+		Field field;
+		Method method;
+
+		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getColumnContainerInstance());
+
+		answer.setVisibility(JavaVisibility.PROTECTED);
+		
+		answer.setStatic(true);
+		context.getCommentGenerator().addClassComment(answer, introspectedTable);
+
+		method = new Method();
+		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setName("ColumnContainer");
+		method.setConstructor(true);
+		method.addBodyLine("super();");
+		// add by suman start 
+		method.addBodyLine("columnContainerStr = new StringBuffer();");
+		// add by suman end
+		answer.addMethod(method);
+
+
+		// now columnList the isValid method
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("isValid");
+		method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
+		
+		method.addBodyLine("return columnContainerStr.length() > 0;");
+		answer.addMethod(method);
+
+
+		//添加代码getAllColumn方法的生成
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("getAllColumn");
+		method.setReturnType(FullyQualifiedJavaType.getStringBufferInstance());
+		method.addBodyLine("return columnContainerStr;");
+		answer.addMethod(method);
+
+
+	
+		field = new Field();
+		field.setVisibility(JavaVisibility.PROTECTED);
+		field.setType(FullyQualifiedJavaType.getStringBufferInstance());
+		field.setName("columnContainerStr");
+		answer.addField(field);
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(field.getType());
+		method.setName(getGetterMethodName(field.getName(), field.getType()));
+		method.addBodyLine("return columnContainerStr;");
+		answer.addMethod(method);
+		
+		method = new Method();
+		method.setVisibility(JavaVisibility.PRIVATE);
+		method.setName("addColumnStr");
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "column"));
+		method.addBodyLine("if (columnContainerStr.length() > 0) {");
+		method.addBodyLine("columnContainerStr.append(\",\");");
+		method.addBodyLine("}");
+		method.addBodyLine("columnContainerStr.append(column);");
+
+		answer.addMethod(method);
+		
+		// add by suman end
+
+
+		
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getNonBLOBColumns()) {
+			topLevelClass.addImportedType(introspectedColumn.getFullyQualifiedJavaType());
+
+			answer.addMethod(getHasColumnMethod(introspectedColumn));
+
+
+		}
+
+		return answer;
+	}
+
+	/*private InnerClass getCriterionInnerClass(TopLevelClass topLevelClass) {
 		Field field;
 		Method method;
 
@@ -328,9 +413,9 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		return answer;
-	}
+	}*/
 
-	private InnerClass getCriteriaInnerClass(TopLevelClass topLevelClass) {
+	/*private InnerClass getCriteriaInnerClass(TopLevelClass topLevelClass) {
 		Method method;
 
 		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
@@ -349,28 +434,26 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		return answer;
-	}
+	}*/
 
-	private InnerClass getGeneratedCriteriaInnerClass(TopLevelClass topLevelClass) {
+	private InnerClass getCriteriaInnerClass(TopLevelClass topLevelClass) {
 		Field field;
 		Method method;
 
-		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getGeneratedCriteriaInstance());
+		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
 
 		answer.setVisibility(JavaVisibility.PROTECTED);
 		answer.setStatic(true);
-		answer.setAbstract(true);
+		answer.setSuperClass(FullyQualifiedJavaType.getGeneratedCriteriaInstance());
 		context.getCommentGenerator().addClassComment(answer, introspectedTable);
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PROTECTED);
-		method.setName("GeneratedCriteria");
+		method.setName("Criteria");
 		method.setConstructor(true);
 		method.addBodyLine("super();");
 		method.addBodyLine("criteria = new ArrayList<Criterion>();");
-		// add by suman start 
-		method.addBodyLine("columnListStr = new StringBuffer();");
-		// add by suman end
+	
 		answer.addMethod(method);
 
 		List<String> criteriaLists = new ArrayList<String>();
@@ -458,27 +541,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.addBodyLine("return criteria;");
 		answer.addMethod(method);
 		
-		// add by suman start
-		field = new Field();
-		field.setVisibility(JavaVisibility.PROTECTED);
-		FullyQualifiedJavaType stringBufferOfCriterion = new FullyQualifiedJavaType("java.lang.StringBuffer");
-		field.setType(stringBufferOfCriterion);
-		field.setName("columnListStr");
-		answer.addField(field);
 		
-		method = new Method();
-		method.setVisibility(JavaVisibility.PRIVATE);
-		method.setName("addColumnStr");
-		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "column"));
-		method.addBodyLine("if (columnListStr.length() > 0) {");
-		method.addBodyLine("columnListStr.append(\",\");");
-		method.addBodyLine("}");
-		method.addBodyLine("columnListStr.append(column);");
-
-		answer.addMethod(method);
-		
-		// add by suman end
-
 		// now add the methods for simplifying the individual field set methods
 		method = new Method();
 		method.setVisibility(JavaVisibility.PROTECTED);
@@ -623,9 +686,6 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 
 			// here we need to add the individual methods for setting the
 			// conditions for a field
-			// add by suman start
-			answer.addMethod(getHasColumnMethod(introspectedColumn));
-			// add by suman end
 			answer.addMethod(getSetNullMethod(introspectedColumn));
 			answer.addMethod(getSetNotNullMethod(introspectedColumn));
 			answer.addMethod(getSetEqualMethod(introspectedColumn));
@@ -662,14 +722,14 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		sb.insert(0, "has");
 		sb.append("Column");
 		method.setName(sb.toString());
-		method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
+		method.setReturnType(FullyQualifiedJavaType.getColumnContainerInstance());
 		sb.setLength(0);
 		sb.append("addColumnStr(\"");
 		sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn));
 		sb.append(' ');
 		sb.append("\");");
 		method.addBodyLine(sb.toString());
-		method.addBodyLine("return (Criteria) this;");
+		method.addBodyLine("return (ColumnContainer) this;");
 
 		return method;
 	}

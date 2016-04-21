@@ -53,7 +53,13 @@ public class FullyQualifiedJavaType implements
     
     /** The generated criteria instance. */
     private static FullyQualifiedJavaType generatedCriteriaInstance = null;
+    // add by suman start
+    private static FullyQualifiedJavaType columnContainerInstance = null;
+    
+    private static FullyQualifiedJavaType stringBufferInstance = null;
 
+	private static FullyQualifiedJavaType columnContainerBaseInstance = null;
+    // add by suman end
     /** The short name without any generic arguments. */
     private String baseShortName;
 
@@ -361,6 +367,13 @@ public class FullyQualifiedJavaType implements
 
         return stringInstance;
     }
+    public static final FullyQualifiedJavaType getStringBufferInstance() {
+        if (stringBufferInstance == null) {
+        	stringBufferInstance = new FullyQualifiedJavaType("java.lang.StringBuffer"); //$NON-NLS-1$
+        }
+
+        return stringBufferInstance;
+    }
 
     /**
      * Gets the boolean primitive instance.
@@ -414,6 +427,7 @@ public class FullyQualifiedJavaType implements
         return criteriaInstance;
     }
 
+
     /**
      * Gets the generated criteria instance.
      *
@@ -427,6 +441,26 @@ public class FullyQualifiedJavaType implements
 
         return generatedCriteriaInstance;
     }
+
+    // add by suman start
+    public static final FullyQualifiedJavaType getColumnContainerInstance() {
+        if (columnContainerInstance == null) {
+        	columnContainerInstance = new FullyQualifiedJavaType(
+                    "ColumnContainer"); //$NON-NLS-1$
+        }
+
+        return columnContainerInstance;
+    }
+
+    public static final FullyQualifiedJavaType getColumnContainerBaseInstance() {
+        if (columnContainerBaseInstance == null) {
+        	columnContainerBaseInstance = new FullyQualifiedJavaType(
+                    "ColumnContainerBase"); //$NON-NLS-1$
+        }
+
+        return columnContainerBaseInstance;
+    }
+    // add by suman end
 
     /*
      * (non-Javadoc)

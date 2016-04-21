@@ -39,8 +39,11 @@ import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.JavaTypeResolver;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.api.XmlFormatter;
+import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.AbstractJavaGenerator;
+import org.mybatis.generator.codegen.mybatis3.model.BaseExampleGenerator;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.PluginAggregator;
 import org.mybatis.generator.internal.db.ActualTableName;
@@ -117,6 +120,8 @@ public class Context extends PropertyHolder {
      * @param defaultModelType
      *            - may be null
      */
+    
+    private String baseExampleName; // add by suman 
     public Context(ModelType defaultModelType) {
         super();
 
@@ -126,6 +131,7 @@ public class Context extends PropertyHolder {
             this.defaultModelType = defaultModelType;
         }
 
+        setBaseExampleName("ExampleBase");
         tableConfigurations = new ArrayList<TableConfiguration>();
         pluginConfigurations = new ArrayList<PluginConfiguration>();
     }
@@ -184,8 +190,17 @@ public class Context extends PropertyHolder {
     public SqlMapGeneratorConfiguration getSqlMapGeneratorConfiguration() {
         return sqlMapGeneratorConfiguration;
     }
+    // add by suman start
+    public String getBaseExampleName() {
+		return this.getJavaModelGeneratorConfiguration().getTargetPackage()+"."+baseExampleName;
+	}
 
-    /**
+	public void setBaseExampleName(String baseExampleName) {
+		this.baseExampleName = baseExampleName;
+	}
+	// add by suman end
+
+	/**
      * Adds the plugin configuration.
      *
      * @param pluginConfiguration
@@ -730,7 +745,10 @@ public class Context extends PropertyHolder {
             }
         }
 
+        
         if (introspectedTables != null) {//如果有表 为每个表生成对应的生成类
+        	
+        	generatedJavaFiles.addAll(getBaseExampleGeneratedJavaFile(callback, warnings));//添加java生成器
             for (IntrospectedTable introspectedTable : introspectedTables) {
                 callback.checkCancel();
 
@@ -746,6 +764,21 @@ public class Context extends PropertyHolder {
 
         generatedJavaFiles.addAll(pluginAggregator.contextGenerateAdditionalJavaFiles());
         generatedXmlFiles.addAll(pluginAggregator.contextGenerateAdditionalXmlFiles());
+    }
+    
+    
+    private List<GeneratedJavaFile> getBaseExampleGeneratedJavaFile(ProgressCallback callback,List<String> warnings){
+    	List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
+    	AbstractJavaGenerator baseExampleGenerator = new BaseExampleGenerator();
+    	baseExampleGenerator.setContext(this);
+    	baseExampleGenerator.setProgressCallback(callback);
+    	baseExampleGenerator.setWarnings(warnings);
+    	List<CompilationUnit> compilationUnits = baseExampleGenerator.getCompilationUnits();
+		for (CompilationUnit compilationUnit : compilationUnits) {
+			GeneratedJavaFile gjf = new GeneratedJavaFile(compilationUnit, this.getJavaModelGeneratorConfiguration().getTargetProject(), this.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING), this.getJavaFormatter());
+			answer.add(gjf);
+		}
+    	return answer;
     }
 
     /**

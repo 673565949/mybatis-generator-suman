@@ -83,6 +83,12 @@ public abstract class IntrospectedTable {
 
 		/** The attr example type. */
 		ATTR_EXAMPLE_TYPE,
+		// add by suman start
+		
+		ATTR_COLUMN_CONTIAN_TYPE,
+		ATTR_BASE_EXAMPLE_TYPE,
+		// add by suman end
+		
 
 		/** The ATT r_ ibati s2_ sq l_ ma p_ package. */
 		ATTR_IBATIS2_SQL_MAP_PACKAGE,
@@ -855,6 +861,14 @@ public abstract class IntrospectedTable {
 		internalAttributes.put(InternalAttribute.ATTR_LEFT_JOIN_LIST_ID, s);
 	}
 	
+	public String getBaseExampleType() {
+		return internalAttributes.get(InternalAttribute.ATTR_BASE_EXAMPLE_TYPE);
+	}
+	
+	public String setBaseExampleType(String s) {
+		return internalAttributes.put(InternalAttribute.ATTR_BASE_EXAMPLE_TYPE,s);
+	}
+	
 	// add by suman end
 
 	/**
@@ -1386,6 +1400,13 @@ public abstract class IntrospectedTable {
 		sb.append(fullyQualifiedTable.getDomainObjectName());
 		sb.append("Example"); //$NON-NLS-1$
 		setExampleType(sb.toString());
+		
+		sb.setLength(0);
+		sb.append(pakkage);
+		sb.append('.');
+		sb.append(fullyQualifiedTable.getDomainObjectName());
+		sb.append("ExampleBase"); //$NON-NLS-1$
+		setBaseExampleType(sb.toString());
 	}
 
 	/**
