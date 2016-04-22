@@ -62,6 +62,11 @@ public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
 		answer.addAttribute(new Attribute("refid", introspectedTable.getBaseColumnListId()));
 		return answer;
 	}
+	protected XmlElement getBaseColumnListRootElement() {
+		XmlElement answer = new XmlElement("include");
+		answer.addAttribute(new Attribute("refid", introspectedTable.getBaseColumnListRootId()));
+		return answer;
+	}
 
 	protected XmlElement getBlobColumnListElement() {
 		XmlElement answer = new XmlElement("include");

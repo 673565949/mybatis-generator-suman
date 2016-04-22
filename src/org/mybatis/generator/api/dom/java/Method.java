@@ -54,9 +54,6 @@ public class Method extends JavaElement {
     private boolean isNative;
     
 
-    /** The is abstract. */// add by suman 
-    private boolean isAbstract;
-
     /**
      * Instantiates a new method.
      */
@@ -173,10 +170,6 @@ public class Method extends JavaElement {
         if (!interfaceMethod) {
             sb.append(getVisibility().getValue());
 
-            if (isAbstract()) {
-                sb.append("abstract "); //$NON-NLS-1$
-            }
-            
             if (isStatic()) {
                 sb.append("static "); //$NON-NLS-1$
             }
@@ -235,10 +228,6 @@ public class Method extends JavaElement {
             }
         }
 
-        if (isAbstract()) {
-        	sb.append(";");
-        	return sb.toString();
-        }
         // if no body lines, then this is an abstract method
         if (bodyLines.size() == 0 || isNative()) {
             sb.append(';');
@@ -431,25 +420,5 @@ public class Method extends JavaElement {
         this.isNative = isNative;
     }
     
-    // add by suman start
-    /**
-     * Checks if is abstract.
-     *
-     * @return true, if is abstract
-     */
-    public boolean isAbstract() {
-        return isAbstract;
-    }
-
-    /**
-     * Sets the abstract.
-     *
-     * @param isAbtract
-     *            the new abstract
-     */
-    public void setAbstract(boolean isAbtract) {
-        this.isAbstract = isAbtract;
-    }
-    
-    // add by suman end
+   
 }

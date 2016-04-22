@@ -179,6 +179,8 @@ public abstract class IntrospectedTable {
 		ATTR_BASE_COLUMN_LIST_ID,
 		
 		// add by suman start
+		ATTR_BASE_COLUMN_LIST_ROOT_ID,
+		
 		ATTR_LEFT_JOIN_LIST_ID,
 		// add by suman end
 
@@ -827,6 +829,7 @@ public abstract class IntrospectedTable {
 		// add by suman end
 		setResultMapWithBLOBsId("ResultMapWithBLOBs"); //$NON-NLS-1$
 		setExampleWhereClauseId("Example_Where_Clause"); //$NON-NLS-1$
+		setBaseColumnListRootId("Base_Column_List_Root"); //$NON-NLS-1$
 		setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
 		setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
 		setMyBatis3UpdateByExampleWhereClauseId("Update_By_Example_Where_Clause"); //$NON-NLS-1$
@@ -853,6 +856,12 @@ public abstract class IntrospectedTable {
 	}
 	
 	// add by suman start
+	public void setBaseColumnListRootId(String s) {
+		internalAttributes.put(InternalAttribute.ATTR_BASE_COLUMN_LIST_ROOT_ID, s);
+	}
+	public String getBaseColumnListRootId() {
+		return internalAttributes.get(InternalAttribute.ATTR_BASE_COLUMN_LIST_ROOT_ID);
+	}
 	public void setBaseResultMapRootId(String s){
 		internalAttributes.put(InternalAttribute.ATTR_BASE_RESULT_MAP_ROOT_ID, s);
 	}

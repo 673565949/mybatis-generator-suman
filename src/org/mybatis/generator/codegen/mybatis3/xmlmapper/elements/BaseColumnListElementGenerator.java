@@ -42,60 +42,108 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		answer.addAttribute(new Attribute("id", introspectedTable.getBaseColumnListId()));
 
 		context.getCommentGenerator().addComment(answer);
+		XmlElement ifExample  = new XmlElement("if");
+		StringBuffer sb = new StringBuffer();
+		sb.append("!(_parameter.getClass().getName() == '");
+		sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+		sb.append("Example')");
+		ifExample.addAttribute(new Attribute("test", sb.toString()));
+		answer.addElement(ifExample);
+		
+		XmlElement include = new XmlElement("include");
+		include.addAttribute(new Attribute("refid",introspectedTable.getMyBatis3SqlMapNamespace()+"."+introspectedTable.getBaseColumnListRootId()));
+		ifExample.addElement(include);
+		
 
-		StringBuilder sb = new StringBuilder();
-		Iterator<IntrospectedColumn> iter = introspectedTable.getNonBLOBColumns().iterator();
+		Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
 		while (iter.hasNext()) {
-			sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(iter.next()));
-
-			if (iter.hasNext()) {
-				sb.append(", ");
+			IntrospectedColumn column = iter.next();
+			IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
+			if(introspectedImportColumn==null){
+				continue;
 			}
-
-			if (sb.length() > 80) {
-				answer.addElement(new TextElement(sb.toString()));
-				sb.setLength(0);
+			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			if(introspectedImportTable.equals(introspectedTable)){
+				continue;
 			}
-		}
-
-		if (sb.length() > 0) {
-			answer.addElement((new TextElement(sb.toString())));
+			XmlElement trim = new XmlElement("trim");
+			trim.addAttribute(new Attribute("prefix", ","));
 			
-			//add by suman start
-			if (introspectedTable.getRules().generateLeftJoin()){
-				iter = introspectedTable.getNonBLOBColumns().iterator();
-				while (iter.hasNext()) {
-					IntrospectedColumn column = iter.next();
-					/*<trim prefix=",">
-		    			<include refid="com.perfect.trains.mapper.ManufacturerMapper.Base_Column_List"></include>
-			    	</trim>
-					*/
-					IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
-					if(introspectedImportColumn==null){
-						continue;
-					}
-					IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
-					if(introspectedImportTable.equals(introspectedTable)){
-						continue;
-					}
-					XmlElement trim = new XmlElement("trim");
-					trim.addAttribute(new Attribute("prefix", ","));
-					answer.addElement(trim);
-					
-					
-					XmlElement include = new XmlElement("include");
-					include.addAttribute(new Attribute("refid", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseColumnListId()));
-					trim.addElement(include);
-					
-
-				}
-			}
-			//add by sulman
+			include = new XmlElement("include");
+			include.addAttribute(new Attribute("refid", introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseColumnListRootId()));
+			trim.addElement(include);
+			
+			ifExample.addElement(trim);
+			
 		}
+		
+		XmlElement elseIfExample  = new XmlElement("if");
+		sb.setLength(0);
+		sb.append("_parameter.getClass().getName() == '");
+		sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+		sb.append("Example'");
+		elseIfExample.addAttribute(new Attribute("test", sb.toString()));
+		answer.addElement(elseIfExample);
+		
+		
+		
+		
+		XmlElement foreachElement = new XmlElement("foreach");
+		elseIfExample.addElement(foreachElement);
+		foreachElement.addAttribute(new Attribute("collection", "columnContainerSet"));
+		foreachElement.addAttribute(new Attribute("item", "columns"));
+		foreachElement.addAttribute(new Attribute("separator", ","));
+		
+		XmlElement chooseElement = new XmlElement("choose");
+		foreachElement.addElement(chooseElement);
+		
+		
+		chooseElement.addElement(getWhenElement(introspectedTable));
+		iter = introspectedTable.getAllColumns().iterator();
+		while (iter.hasNext()) {
+			IntrospectedColumn column = iter.next();
+			IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
+			if(introspectedImportColumn==null){
+				continue;
+			}
+			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			if(introspectedImportTable.equals(introspectedTable)){
+				continue;
+			}
+			XmlElement whenElement = getWhenElement(introspectedImportTable);
+			chooseElement.addElement(whenElement);
+			
+
+		}
+
+		
 		
 		
 		if (context.getPlugins().sqlMapBaseColumnListElementGenerated(answer, introspectedTable)) {
 			parentElement.addElement(answer);
 		}
+	}
+	
+	private XmlElement getWhenElement(IntrospectedTable table){
+		XmlElement whenElement= new XmlElement("when");
+		StringBuffer sb = new StringBuffer();
+		sb.setLength(0);
+		sb.append("columns.tableName == '");
+		sb.append(table.getActualTableName().getTableName());
+		sb.append("'.toString()");
+		
+		whenElement.addAttribute(new Attribute("test", sb.toString()));
+		
+		XmlElement ifElement = new XmlElement("if");
+		ifElement.addAttribute(new Attribute("test", "columns.valid"));
+		ifElement.addElement(new TextElement("${columns.columnContainerSet}"));
+		whenElement.addElement(ifElement);
+		XmlElement elseIfElement = new XmlElement("if");
+		elseIfElement.addAttribute(new Attribute("test", "!columns.valid"));
+		XmlElement includeElement = new XmlElement("include");
+		includeElement.addAttribute(new Attribute("refid", table.getMyBatis3SqlMapNamespace()+"."+table.getBaseColumnListRootId()));
+		elseIfElement.addElement(includeElement);
+		whenElement.addElement(elseIfElement);
+		return whenElement;
 	}
 }

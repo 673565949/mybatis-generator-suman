@@ -39,6 +39,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 
+
 /**
  * 
  * @author Jeff Butler
@@ -178,10 +179,24 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setVisibility(JavaVisibility.PROTECTED);
 		method.setName("createCriteriaInternal");
 		method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
-		method.addBodyLine("Criteria criteria = new Criteria();");
+		method.addBodyLine("Criteria criteria = new Criteria(this.tableName);");
 		method.addBodyLine("return criteria;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
+		
+		// add by suman start
+		
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("createColumnContainer");
+		method.setReturnType(FullyQualifiedJavaType.getColumnContainerInstance());
+		method.addBodyLine("if(columnContainer == null){");
+		method.addBodyLine("columnContainer = new ColumnContainer(this.tableName);");
+		method.addBodyLine("}");
+		method.addBodyLine("return (ColumnContainer)columnContainer;");
+		commentGenerator.addGeneralMethodComment(method, introspectedTable);
+		topLevelClass.addMethod(method);
+		// add by suman end
 
 		/*method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
@@ -218,20 +233,22 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		answer.setVisibility(JavaVisibility.PROTECTED);
 		
 		answer.setStatic(true);
+		answer.setSuperClass(FullyQualifiedJavaType.getColumnContainerBaseInstance());
 		context.getCommentGenerator().addClassComment(answer, introspectedTable);
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PROTECTED);
 		method.setName("ColumnContainer");
 		method.setConstructor(true);
-		method.addBodyLine("super();");
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "tableName"));
+		method.addBodyLine("super(tableName);");
 		// add by suman start 
-		method.addBodyLine("columnContainerStr = new StringBuffer();");
+		//method.addBodyLine("columnContainerStr = new StringBuffer();");
 		// add by suman end
 		answer.addMethod(method);
 
 
-		// now columnList the isValid method
+/*		// now columnList the isValid method
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("isValid");
@@ -247,11 +264,11 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setName("getAllColumn");
 		method.setReturnType(FullyQualifiedJavaType.getStringBufferInstance());
 		method.addBodyLine("return columnContainerStr;");
-		answer.addMethod(method);
+		answer.addMethod(method);*/
 
 
 	
-		field = new Field();
+		/*field = new Field();
 		field.setVisibility(JavaVisibility.PROTECTED);
 		field.setType(FullyQualifiedJavaType.getStringBufferInstance());
 		field.setName("columnContainerStr");
@@ -261,8 +278,8 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setReturnType(field.getType());
 		method.setName(getGetterMethodName(field.getName(), field.getType()));
 		method.addBodyLine("return columnContainerStr;");
-		answer.addMethod(method);
-		
+		answer.addMethod(method);*/
+		/*
 		method = new Method();
 		method.setVisibility(JavaVisibility.PRIVATE);
 		method.setName("addColumnStr");
@@ -272,7 +289,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.addBodyLine("}");
 		method.addBodyLine("columnContainerStr.append(column);");
 
-		answer.addMethod(method);
+		answer.addMethod(method);*/
 		
 		// add by suman end
 
@@ -450,7 +467,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 
 		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
 
-		answer.setVisibility(JavaVisibility.PROTECTED);
+		answer.setVisibility(JavaVisibility.PUBLIC);
 		answer.setStatic(true);
 		answer.setSuperClass(FullyQualifiedJavaType.getGeneratedCriteriaInstance());
 		context.getCommentGenerator().addClassComment(answer, introspectedTable);
@@ -459,7 +476,8 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setVisibility(JavaVisibility.PROTECTED);
 		method.setName("Criteria");
 		method.setConstructor(true);
-		method.addBodyLine("super();");
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "tableName"));
+		method.addBodyLine("super(tableName);");
 		//method.addBodyLine("criteria = new ArrayList<Criterion>();");
 		method.addBodyLine("tableName = \""+introspectedTable.getActualTableName().getTableName()+"\";");
 	
