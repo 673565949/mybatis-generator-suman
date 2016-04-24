@@ -44,7 +44,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		context.getCommentGenerator().addComment(answer);
 		XmlElement ifExample  = new XmlElement("if");
 		StringBuffer sb = new StringBuffer();
-		sb.append("!(_parameter.getClass().getName() == '");
+		sb.append("!(_parameter.getClass().getSimpleName() == '");
 		sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
 		sb.append("Example')");
 		ifExample.addAttribute(new Attribute("test", sb.toString()));
@@ -79,7 +79,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		
 		XmlElement elseIfExample  = new XmlElement("if");
 		sb.setLength(0);
-		sb.append("_parameter.getClass().getName() == '");
+		sb.append("_parameter.getClass().getSimpleName() == '");
 		sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
 		sb.append("Example'");
 		elseIfExample.addAttribute(new Attribute("test", sb.toString()));
@@ -136,7 +136,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		
 		XmlElement ifElement = new XmlElement("if");
 		ifElement.addAttribute(new Attribute("test", "columns.valid"));
-		ifElement.addElement(new TextElement("${columns.columnContainerSet}"));
+		ifElement.addElement(new TextElement("${columns.columnContainerStr}"));
 		whenElement.addElement(ifElement);
 		XmlElement elseIfElement = new XmlElement("if");
 		elseIfElement.addAttribute(new Attribute("test", "!columns.valid"));

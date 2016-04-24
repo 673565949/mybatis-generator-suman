@@ -230,7 +230,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 
 		InnerClass answer = new InnerClass(FullyQualifiedJavaType.getColumnContainerInstance());
 
-		answer.setVisibility(JavaVisibility.PROTECTED);
+		answer.setVisibility(JavaVisibility.PUBLIC);
 		
 		answer.setStatic(true);
 		answer.setSuperClass(FullyQualifiedJavaType.getColumnContainerBaseInstance());
