@@ -18,6 +18,7 @@ package org.mybatis.generator.codegen.mybatis3.model;
 import static org.mybatis.generator.internal.util.JavaBeansUtil.getGetterMethodName;
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getValidPropertyName;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.List;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.FullyQualifiedTable;
 import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.OutputUtilities;
 import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.api.dom.java.Field;
@@ -36,8 +38,13 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+
+
 
 
 /**
@@ -75,6 +82,28 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
+		
+		// add by suman start 
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+
+			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
+			if (introspectedImportColumn == null) {
+				continue;
+			}
+			IntrospectedTable introspectedImportTable = introspectedImportColumn.getIntrospectedTable();
+			if(introspectedImportTable.equals(introspectedTable)){
+				continue;
+			}
+			method = getCreateOtherExampleColumnsMethod(introspectedImportTable);
+			commentGenerator.addGeneralMethodComment(method, introspectedTable);
+			topLevelClass.addMethod(method);
+			topLevelClass.addMethod(getAndOtherExampleCriteriaMethod(introspectedImportTable));
+			topLevelClass.addMethod(getOrOtherExampleCriteriaMethod(introspectedImportTable));
+			topLevelClass.addMethod(getAndOtherExampleCriteriaMethodWithCriteria(introspectedImportTable));
+		}
+		
+		
+		// add by suman end
 
 		// add field, getter, setter for orderby clause
 		/*Field field = new Field();
@@ -188,14 +217,17 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.setName("createColumnContainer");
+		method.setName("createColumns");
 		method.setReturnType(FullyQualifiedJavaType.getColumnContainerInstance());
+		method.addBodyLine("ColumnContainer columnContainer = (ColumnContainer) columnContainerMap.get(this.tableName);");
 		method.addBodyLine("if(columnContainer == null){");
 		method.addBodyLine("columnContainer = new ColumnContainer(this.tableName);");
+		method.addBodyLine("columnContainerMap.put(this.tableName,columnContainer);");
 		method.addBodyLine("}");
 		method.addBodyLine("return (ColumnContainer)columnContainer;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
+		
 		// add by suman end
 
 		/*method = new Method();
@@ -224,6 +256,158 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		return answer;
 	}
 
+	private Method getCreateOtherExampleColumnsMethod(IntrospectedTable introspectedImportTable){
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getExampleType());
+		StringBuffer sb = new StringBuffer();
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		sb.append("create");
+		sb.append(importType.getShortName().replace("Example", ""));
+		sb.append("Columns");
+		method.setName(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".ColumnContainer");
+		method.setReturnType(new FullyQualifiedJavaType(sb.toString()),false);
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(" ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(" = new ");
+		sb.append(importType.getShortName());
+		sb.append("();");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".ColumnContainer columnContainer = (");
+		sb.append(importType.getShortName());
+		sb.append(".ColumnContainer) columnContainerMap.get(");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".getTableName());");
+		method.addBodyLine(sb.toString());
+		method.addBodyLine(" if(columnContainer == null){");
+		sb.setLength(0);
+		sb.append("columnContainer = ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".createColumns();");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		sb.append("columnContainerMap.put(");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".getTableName(),columnContainer);");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		method.addBodyLine("}");
+		method.addBodyLine("leftJoinTableSet.add(columnContainer.getTableName());");
+		method.addBodyLine("return columnContainer;");
+		return method;
+	}
+	private Method getAndOtherExampleCriteriaMethod(IntrospectedTable introspectedImportTable){
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getExampleType());
+		StringBuffer sb = new StringBuffer();
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		sb.append("and");
+		sb.append(importType.getShortName().replace("Example", ""));
+		sb.append("Criteria");
+		method.setName(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria");
+		method.setReturnType(new FullyQualifiedJavaType(sb.toString()),false);
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(" ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(" = new ");
+		sb.append(importType.getShortName());
+		sb.append("();");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria criteria = ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".createCriteria();");
+		method.addBodyLine(sb.toString());
+		method.addBodyLine("Criteria myCriteria = null;");
+		method.addBodyLine("if (oredCriteria.size() == 0) {");
+		method.addBodyLine("myCriteria =  createCriteriaInternal();");
+		method.addBodyLine("oredCriteria.add(myCriteria);");
+		method.addBodyLine("}else{");
+		method.addBodyLine("myCriteria =  (Criteria)oredCriteria.get(0);");
+		method.addBodyLine("}");
+		method.addBodyLine("leftJoinTableSet.add(criteria.getTableName());");
+		method.addBodyLine("criteria.setAllCriteria(myCriteria.getAllCriteria());");
+		method.addBodyLine("return criteria;");
+		return method;
+	}
+	private Method getAndOtherExampleCriteriaMethodWithCriteria(IntrospectedTable introspectedImportTable){
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getExampleType());
+		StringBuffer sb = new StringBuffer();
+		Method method = new Method();
+		method.addParameter(new Parameter(new FullyQualifiedJavaType("Criteria"), "criteria"));
+		method.setVisibility(JavaVisibility.PUBLIC);
+		sb.append("and");
+		sb.append(importType.getShortName().replace("Example", ""));
+		sb.append("Criteria");
+		method.setName(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria");
+		method.setReturnType(new FullyQualifiedJavaType(sb.toString()),false);
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(" ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(" = new ");
+		sb.append(importType.getShortName());
+		sb.append("();");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria newCriteria = ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".createCriteria();");
+		method.addBodyLine(sb.toString());
+		method.addBodyLine("leftJoinTableSet.add(newCriteria.getTableName());");
+		method.addBodyLine("newCriteria.setAllCriteria(criteria.getAllCriteria());");
+		method.addBodyLine("return newCriteria;");
+		return method;
+	}
+
+	private Method getOrOtherExampleCriteriaMethod(IntrospectedTable introspectedImportTable){
+		FullyQualifiedJavaType importType = new FullyQualifiedJavaType(introspectedImportTable.getExampleType());
+		StringBuffer sb = new StringBuffer();
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		sb.append("or");
+		sb.append(importType.getShortName().replace("Example", ""));
+		sb.append("Criteria");
+		method.setName(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria");
+		method.setReturnType(new FullyQualifiedJavaType(sb.toString()),false);
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(" ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(" = new ");
+		sb.append(importType.getShortName());
+		sb.append("();");
+		method.addBodyLine(sb.toString());
+		sb.setLength(0);
+		sb.append(importType.getShortName());
+		sb.append(".Criteria criteria = ");
+		sb.append(getValidPropertyName(importType.getShortName()));
+		sb.append(".createCriteria();");
+		method.addBodyLine(sb.toString());
+		method.addBodyLine("leftJoinTableSet.add(criteria.getTableName());");
+		method.addBodyLine("oredCriteria.add(criteria);");
+		method.addBodyLine("return criteria;");
+		return method;
+	}
+	
 	private InnerClass getColumnContainerClass(TopLevelClass topLevelClass) {
 		Field field;
 		Method method;
@@ -547,6 +731,13 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 			method.addBodyLine("}");
 			method.addBodyLine("return allCriteria;");
 		}
+		answer.addMethod(method);
+		
+		method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("setAllCriteria");
+		method.addParameter(new Parameter(new FullyQualifiedJavaType("List<Criterion>"), "criteria"));
+		method.addBodyLine("this.criteria = criteria;");
 		answer.addMethod(method);
 
 		// now we need to generate the methods that will be used in the SqlMap

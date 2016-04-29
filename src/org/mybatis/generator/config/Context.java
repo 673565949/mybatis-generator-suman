@@ -754,6 +754,11 @@ public class Context extends PropertyHolder {
 
                 introspectedTable.initialize();
                 introspectedTable.calculateGenerators(warnings, callback);//初始化生成器
+            
+            }
+            
+            for (IntrospectedTable introspectedTable : introspectedTables) {
+            
                 generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());//添加java生成器
                 generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());//添加xml生成器
 

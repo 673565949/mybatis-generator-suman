@@ -52,6 +52,8 @@ public class Method extends JavaElement {
     
     /** The is native. */
     private boolean isNative;
+
+	private boolean isShort;
     
 
     /**
@@ -193,7 +195,12 @@ public class Method extends JavaElement {
             if (getReturnType() == null) {
                 sb.append("void"); //$NON-NLS-1$
             } else {
-                sb.append(getReturnType().getShortName());
+            	if (isShort) {
+            		 sb.append(getReturnType().getShortName());
+				}else{
+					sb.append(getReturnType().getFullyQualifiedName());
+				}
+               
             }
             sb.append(' ');
         }
@@ -353,6 +360,10 @@ public class Method extends JavaElement {
         return returnType;
     }
 
+    public void setReturnType(FullyQualifiedJavaType returnType,boolean isShort) {
+    	this.isShort = isShort;
+        this.returnType = returnType;
+    }
     /**
      * Sets the return type.
      *
@@ -360,7 +371,7 @@ public class Method extends JavaElement {
      *            The returnType to set.
      */
     public void setReturnType(FullyQualifiedJavaType returnType) {
-        this.returnType = returnType;
+    	this.setReturnType(returnType,true);
     }
 
     /**
