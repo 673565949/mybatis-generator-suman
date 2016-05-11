@@ -16,23 +16,23 @@
 			<property name="suppressAllComments" value="true"/>
 		</commentGenerator>
 		<!--数据库链接URL，用户名、密码 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/project" userId="root" password="1234">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/project_suman" userId="root" password="1234">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false"/>
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置-->
-		<javaModelGenerator targetPackage="com.perfect.trains.model" targetProject="H:\myworkspace\project_extjs4.2_suman/src">
+		<javaModelGenerator targetPackage="com.perfect.trains.model" targetProject="E:\workspace\project_extjs4.2_suman/src">
 			<property name="enableSubPackages" value="true"/>
 			<property name="trimStrings" value="true"/>
 			<property name="rootClass" value="com.perfect.trains.base.BaseModel"/>
 		</javaModelGenerator>
 		<!-- 生成映射文件的包名和位置-->
-		<sqlMapGenerator targetPackage="com.perfect.trains.mapping" targetProject="H:\myworkspace\project_extjs4.2_suman/src">
+		<sqlMapGenerator targetPackage="com.perfect.trains.mapper" targetProject="E:\workspace\project_extjs4.2_suman/src">
 			<property name="enableSubPackages" value="true"/>
 		</sqlMapGenerator>
 		<!-- 生成DAO的包名和位置-->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.perfect.trains.mapper" targetProject="H:\myworkspace\project_extjs4.2_suman/src" >
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.perfect.trains.mapper" targetProject="E:\workspace\project_extjs4.2_suman/src" >
 			<property name="enableSubPackages" value="true"/>
 			<property name="rootInterface" value="com.perfect.trains.base.BaseMapper"/>
 		</javaClientGenerator>

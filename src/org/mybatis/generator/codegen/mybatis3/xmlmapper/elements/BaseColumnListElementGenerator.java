@@ -55,7 +55,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		ifExample.addElement(include);
 		
 
-		Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
+		/*Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
 		while (iter.hasNext()) {
 			IntrospectedColumn column = iter.next();
 			IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
@@ -75,7 +75,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 			
 			ifExample.addElement(trim);
 			
-		}
+		}*/
 		
 		XmlElement elseIfExample  = new XmlElement("if");
 		sb.setLength(0);
@@ -99,7 +99,7 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
 		
 		
 		chooseElement.addElement(getWhenElement(introspectedTable));
-		iter = introspectedTable.getAllColumns().iterator();
+		Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
 		while (iter.hasNext()) {
 			IntrospectedColumn column = iter.next();
 			IntrospectedColumn introspectedImportColumn = column.getIntrospectedImportColumn();
