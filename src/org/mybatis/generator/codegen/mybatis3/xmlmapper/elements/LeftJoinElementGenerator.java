@@ -35,7 +35,7 @@ public class LeftJoinElementGenerator extends AbstractXmlElementGenerator {
 		foreach.addAttribute(new Attribute("item", "leftJoinTable"));
 		XmlElement choose = new XmlElement("choose");
 		foreach.addElement(choose);
-		
+		boolean isNeedAdd = false;
 		for (IntrospectedColumn introspectedColumn : columns) {
 
 			IntrospectedColumn introspectedImportColumn = introspectedColumn.getIntrospectedImportColumn();
@@ -46,6 +46,7 @@ public class LeftJoinElementGenerator extends AbstractXmlElementGenerator {
 			if(introspectedImportTable.equals(introspectedTable)){
 				continue;
 			}
+			isNeedAdd = true;
 			StringBuffer sb = new StringBuffer();
 			sb.append("left join ");
 			sb.append(introspectedImportTable.getAliasedFullyQualifiedTableNameAtRuntime());
@@ -67,7 +68,7 @@ public class LeftJoinElementGenerator extends AbstractXmlElementGenerator {
 			choose.addElement(when);
 
 		}
-		if(answer.getElements() == null || answer.getElements().isEmpty()){
+		if(answer.getElements() == null || answer.getElements().isEmpty()||!isNeedAdd){
 			return;
 		}
 		

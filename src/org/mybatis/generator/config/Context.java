@@ -131,7 +131,7 @@ public class Context extends PropertyHolder {
             this.defaultModelType = defaultModelType;
         }
 
-        setBaseExampleName("ExampleBase");
+        setBaseExampleName("BaseExample");
         tableConfigurations = new ArrayList<TableConfiguration>();
         pluginConfigurations = new ArrayList<PluginConfiguration>();
     }
@@ -192,7 +192,7 @@ public class Context extends PropertyHolder {
     }
     // add by suman start
     public String getBaseExampleName() {
-		return this.getJavaModelGeneratorConfiguration().getTargetPackage()+"."+baseExampleName;
+		return this.getJavaModelGeneratorConfiguration().getTargetPackage().replace("model", "base")+"."+baseExampleName;
 	}
 
 	public void setBaseExampleName(String baseExampleName) {
@@ -642,16 +642,16 @@ public class Context extends PropertyHolder {
 
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
 
-            for (TableConfiguration tc : tableConfigurations) {//±éÀú±í¶ÔÏó
+            for (TableConfiguration tc : tableConfigurations) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 String tableName = composeFullyQualifiedTableName(tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
-                //Æ´½ÓÍêÕû±íÃ÷ catalog.schema.tableName
-                if (fullyQualifiedTableNames != null&& fullyQualifiedTableNames.size() > 0) {//²ÎÊý¿ÉÒÔÉèÖÃ±íÃû£¬Èç¹ûÉèÖÃÁËÇÒ²»°üº¬Õâ¸ö±íÃû Ìø¹ý
+                //Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ catalog.schema.tableName
+                if (fullyQualifiedTableNames != null&& fullyQualifiedTableNames.size() > 0) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     if (!fullyQualifiedTableNames.contains(tableName)) {
                         continue;
                     }
                 }
 
-                if (!tc.areAnyStatementsEnabled()) {//Èç¹û²»ÐèÒªÉú³ÉÈÎºÎ²éÑ¯Óï¾ä
+                if (!tc.areAnyStatementsEnabled()) {//ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ÎºÎ²ï¿½Ñ¯ï¿½ï¿½ï¿½
                     warnings.add(getString("Warning.0", tableName)); //$NON-NLS-1$
                     continue;
                 }
@@ -673,19 +673,23 @@ public class Context extends PropertyHolder {
             }
             //add by suman start
             
-            for (IntrospectedTable introspectedTable : introspectedTables) {//±éÀúËùÓÐµÄ±í
-				List<IntrospectedColumn> foreignKeyColumns = introspectedTable.getForeignKeyColumns();//µÃµ½±íµÄÍâ¼üÁÐ
-				if(foreignKeyColumns == null) continue;//Èç¹ûÃ»ÓÐÍâ¼üÁÐ Ìø¹ý
-				for (IntrospectedColumn foreignKeyColumn : foreignKeyColumns) {//±éÀúÍâ¼üÁÐ
-					ImportColumn importColumn = foreignKeyColumn.getImportColumn();//µÃµ½Íâ¼üÁÐ¶ÔÓ¦µÄÒýÈëÁÐ
+            for (IntrospectedTable introspectedTable : introspectedTables) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ±ï¿½
+				List<IntrospectedColumn> foreignKeyColumns = introspectedTable.getForeignKeyColumns();//ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				if(foreignKeyColumns == null) continue;//ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+				for (IntrospectedColumn foreignKeyColumn : foreignKeyColumns) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					ImportColumn importColumn = foreignKeyColumn.getImportColumn();//ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if(importColumn == null) continue;
-					ActualTableName importTable = importColumn.getImportTable();//µÃµ½ÒýÈë±í
+					ActualTableName importTable = importColumn.getImportTable();//ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if(importTable == null) continue;
-					IntrospectedTable importIntrospectedTable = introspectedTableMap.get(importTable);//µÃµ½ÒýÈë±í¶ÔÏó
-					List<IntrospectedColumn> allColumns = importIntrospectedTable.getAllColumns();//±éÀúÒýÈë±íµÄÁÐ
+					
+					IntrospectedTable importIntrospectedTable = introspectedTableMap.get(importTable);//ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					if(importIntrospectedTable == null){
+						System.out.println();
+					}
+					List<IntrospectedColumn> allColumns = importIntrospectedTable.getAllColumns();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					for (IntrospectedColumn importTableColumn : allColumns) {
 						if(importTableColumn.getActualColumnName().equals(importColumn.getImportColumnName())){
-							foreignKeyColumn.setIntrospectedImportColumn(importTableColumn);//¸øÍâ¼üÁÐ ÉèÖÃÒýÈëÁÐ
+							foreignKeyColumn.setIntrospectedImportColumn(importTableColumn);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							System.out.println(importIntrospectedTable+" "+importTableColumn);
 						}
 					}
@@ -735,32 +739,32 @@ public class Context extends PropertyHolder {
             List<GeneratedXmlFile> generatedXmlFiles, List<String> warnings)
             throws InterruptedException {
 
-        pluginAggregator = new PluginAggregator();//²å¼þÕûºÏÆ÷
+        pluginAggregator = new PluginAggregator();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         for (PluginConfiguration pluginConfiguration : pluginConfigurations) {
             Plugin plugin = ObjectFactory.createPlugin(this,pluginConfiguration);
             if (plugin.validate(warnings)) {
-                pluginAggregator.addPlugin(plugin);//½«²å¼þ·ÅÈë²å¼þÕûºÏÆ÷
+                pluginAggregator.addPlugin(plugin);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             } else {
                 warnings.add(getString("Warning.24",pluginConfiguration.getConfigurationType(), id));
             }
         }
 
         
-        if (introspectedTables != null) {//Èç¹ûÓÐ±í ÎªÃ¿¸ö±íÉú³É¶ÔÓ¦µÄÉú³ÉÀà
+        if (introspectedTables != null) {//ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ ÎªÃ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         	
-        	generatedJavaFiles.addAll(getBaseExampleGeneratedJavaFile(callback, warnings));//Ìí¼ÓjavaÉú³ÉÆ÷
+        	generatedJavaFiles.addAll(getBaseExampleGeneratedJavaFile(callback, warnings));//ï¿½ï¿½ï¿½baseï¿½ï¿½javaï¿½ï¿½ï¿½ï¿½ï¿½
             for (IntrospectedTable introspectedTable : introspectedTables) {
                 callback.checkCancel();
 
                 introspectedTable.initialize();
-                introspectedTable.calculateGenerators(warnings, callback);//³õÊ¼»¯Éú³ÉÆ÷
+                introspectedTable.calculateGenerators(warnings, callback);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             
             }
             
             for (IntrospectedTable introspectedTable : introspectedTables) {
             
-                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());//Ìí¼ÓjavaÉú³ÉÆ÷
-                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());//Ìí¼ÓxmlÉú³ÉÆ÷
+                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());//ï¿½ï¿½ï¿½javaï¿½ï¿½ï¿½ï¿½ï¿½
+                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());//ï¿½ï¿½ï¿½xmlï¿½ï¿½ï¿½ï¿½ï¿½
 
                 generatedJavaFiles.addAll(pluginAggregator.contextGenerateAdditionalJavaFiles(introspectedTable));
                 generatedXmlFiles.addAll(pluginAggregator.contextGenerateAdditionalXmlFiles(introspectedTable));

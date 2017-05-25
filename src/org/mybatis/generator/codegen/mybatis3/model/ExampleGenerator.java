@@ -69,6 +69,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 		FullyQualifiedJavaType superType = new FullyQualifiedJavaType(context.getBaseExampleName());
 		topLevelClass.setSuperClass(superType);
+		topLevelClass.addImportedType(superType);
 		commentGenerator.addJavaFileComment(topLevelClass);
 
 		// add default constructor
@@ -181,7 +182,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.addBodyLine("oredCriteria.add(criteria);");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
-
+*/
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("or");
@@ -190,7 +191,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.addBodyLine("oredCriteria.add(criteria);");
 		method.addBodyLine("return criteria;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
-		topLevelClass.addMethod(method);*/
+		topLevelClass.addMethod(method);
 
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
@@ -442,7 +443,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 
-		//Ìí¼Ó´úÂëgetAllColumn·½·¨µÄÉú³É
+		//ï¿½ï¿½Ó´ï¿½ï¿½ï¿½getAllColumnï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("getAllColumn");
@@ -944,7 +945,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setReturnType(FullyQualifiedJavaType.getColumnContainerInstance());
 		sb.setLength(0);
 		sb.append("addColumnStr(\"");
-		sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn));
+		sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn).replace("\"", "\\\""));
 		sb.append(' ');
 		sb.append("\");");
 		method.addBodyLine(sb.toString());

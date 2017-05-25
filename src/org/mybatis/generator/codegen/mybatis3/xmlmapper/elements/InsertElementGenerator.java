@@ -74,6 +74,8 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
                             "useGeneratedKeys", "true")); //$NON-NLS-1$ //$NON-NLS-2$
                     answer.addAttribute(new Attribute(
                             "keyProperty", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+                    answer.addAttribute(new Attribute(
+                            "keyColumn", introspectedColumn.getActualColumnName())); //$NON-NLS-1$
                 } else {
                     answer.addElement(getSelectKey(introspectedColumn, gk));
                 }
@@ -95,14 +97,18 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
         for (int i = 0; i < columns.size(); i++) {
             IntrospectedColumn introspectedColumn = columns.get(i);
             if (introspectedColumn.isIdentity()) {
-                // cannot set values on identity fields
-                continue;
+            	 insertClause.append(MyBatis3FormattingUtilities
+                         .getEscapedColumnName(introspectedColumn));
+                 valuesClause.append(introspectedTable
+                         .getFullyQualifiedTableNameAtRuntime()+"_ID_SEQ.nextval");
+            }else{
+            	 insertClause.append(MyBatis3FormattingUtilities
+                         .getEscapedColumnName(introspectedColumn));
+                 valuesClause.append(MyBatis3FormattingUtilities
+                         .getParameterClause(introspectedColumn));
             }
 
-            insertClause.append(MyBatis3FormattingUtilities
-                    .getEscapedColumnName(introspectedColumn));
-            valuesClause.append(MyBatis3FormattingUtilities
-                    .getParameterClause(introspectedColumn));
+           
             if (i + 1 < columns.size()) {
                 if (!columns.get(i + 1).isIdentity()) {
                     insertClause.append(", "); //$NON-NLS-1$

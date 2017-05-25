@@ -224,7 +224,10 @@ public class FullyQualifiedTable {
 
         if (stringHasValue(alias)) {
             sb.append(' ');
-            sb.append(alias);
+            StringBuilder aliasSb = new StringBuilder();
+            aliasSb.append(alias);
+            addDelimiters(aliasSb);
+            sb.append(aliasSb);
         }
 
         return sb.toString();

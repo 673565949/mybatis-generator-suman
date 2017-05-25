@@ -43,11 +43,11 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 
 	@Override
 	public void addElements(XmlElement parentElement) {
-		XmlElement answer = new XmlElement("resultMap");//´´½¨resultMap±êÇ©
-		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapRootId()));//Ìí¼ÓÊôÐÔ id
+		XmlElement answer = new XmlElement("resultMap");//ï¿½ï¿½ï¿½ï¿½resultMapï¿½ï¿½Ç©
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapRootId()));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ id
 
 		String returnType;
-		if (isSimple) {// Èç¹ûÊÇ¼òÒ×Ä£Ê½
+		if (isSimple) {// ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½ï¿½ï¿½Ä£Ê½
 			returnType = introspectedTable.getBaseRecordType();
 		} else {
 			if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -61,7 +61,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 
 		context.getCommentGenerator().addComment(answer);
 
-		if (introspectedTable.isConstructorBased()) {// ÊÇ·ñÉú³É¹¹Ôìº¯Êý
+		if (introspectedTable.isConstructorBased()) {// ï¿½Ç·ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ìº¯ï¿½ï¿½
 			addResultMapConstructorElements(answer);
 		} else {
 			addResultMapElements(answer);
@@ -70,8 +70,8 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 		if (context.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
 			parentElement.addElement(answer);
 		}
-		answer = new XmlElement("resultMap");//´´½¨resultMap±êÇ©
-		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapId()));//Ìí¼ÓÊôÐÔ id
+		answer = new XmlElement("resultMap");//ï¿½ï¿½ï¿½ï¿½resultMapï¿½ï¿½Ç©
+		answer.addAttribute(new Attribute("id", introspectedTable.getBaseResultMapId()));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ id
 		answer.addAttribute(new Attribute("type", returnType));
 		answer.addAttribute(new Attribute("extends", introspectedTable.getBaseResultMapRootId()));
 
@@ -116,7 +116,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 
 			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
 			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty()));
-			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
+			//resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
 
 			if (stringHasValue(introspectedColumn.getTypeHandler())) {
 				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
@@ -176,7 +176,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 			String resultMap = introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapId();
 			if(introspectedImportTable.equals(introspectedTable)){
 				 //resultMap = introspectedImportTable.getMyBatis3SqlMapNamespace()+"."+introspectedImportTable.getBaseResultMapRootId();
-				continue; //Í¬±íÍâ¼ü²»´¦Àí ´¦Àí²»ÁË°¡
+				continue; //Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ë°ï¿½
 			}
 			XmlElement association = new XmlElement("association");
 			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedImportTable.getBaseRecordType());

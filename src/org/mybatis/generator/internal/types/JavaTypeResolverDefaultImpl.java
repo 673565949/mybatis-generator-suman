@@ -100,7 +100,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 			case Types.DECIMAL:
 			case Types.NUMERIC:
 				if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
-					answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
+					answer = new FullyQualifiedJavaType(Long.class.getName());
 				} else if (introspectedColumn.getLength() > 9) {
 					answer = new FullyQualifiedJavaType(Long.class.getName());
 				} else if (introspectedColumn.getLength() > 4) {
