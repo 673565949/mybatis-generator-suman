@@ -116,7 +116,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
 
 			resultElement.addAttribute(new Attribute("column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
 			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty()));
-			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
+			//resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName()));
 
 			if (stringHasValue(introspectedColumn.getTypeHandler())) {
 				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler()));
