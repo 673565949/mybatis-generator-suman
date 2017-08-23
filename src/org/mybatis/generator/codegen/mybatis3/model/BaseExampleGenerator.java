@@ -194,7 +194,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
 
-		method = new Method();
+	/*	method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("or");
 		method.setReturnType(FullyQualifiedJavaType.getGeneratedCriteriaInstance());
@@ -203,7 +203,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		method.addBodyLine("return criteria;");
 		commentGenerator.addGeneralMethodComment(method, introspectedTable);
 		topLevelClass.addMethod(method);
-		
+		*/
 		
 		
 
@@ -338,7 +338,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 
-		//Ìí¼Ó´úÂëgetAllColumn·½·¨µÄÉú³É
+		//ï¿½ï¿½Ó´ï¿½ï¿½ï¿½getAllColumnï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		method = new Method();
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("getAllColumn");
@@ -457,7 +457,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(getGetter(field));
 
 		method = new Method();
-		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("Criterion");
 		method.setConstructor(true);
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "condition"));
@@ -468,7 +468,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		method = new Method();
-		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("Criterion");
 		method.setConstructor(true);
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "condition"));
@@ -486,7 +486,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		method = new Method();
-		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("Criterion");
 		method.setConstructor(true);
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "condition"));
@@ -495,7 +495,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		method = new Method();
-		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("Criterion");
 		method.setConstructor(true);
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "condition"));
@@ -511,7 +511,7 @@ public class BaseExampleGenerator  extends AbstractJavaGenerator {
 		answer.addMethod(method);
 
 		method = new Method();
-		method.setVisibility(JavaVisibility.PROTECTED);
+		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("Criterion");
 		method.setConstructor(true);
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "condition"));
