@@ -945,7 +945,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
 		method.setReturnType(FullyQualifiedJavaType.getColumnContainerInstance());
 		sb.setLength(0);
 		sb.append("addColumnStr(\"");
-		sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn));
+		sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn).replace("\"", "\\\""));
 		sb.append(' ');
 		sb.append("\");");
 		method.addBodyLine(sb.toString());

@@ -45,7 +45,7 @@ public class DeleteByExampleElementGenerator extends
 
         StringBuilder sb = new StringBuilder();
         sb.append("delete "); //$NON-NLS-1$
-        if(introspectedTable.getFullyQualifiedTable().getAlias()!=null) sb.append(introspectedTable.getFullyQualifiedTable().getAlias());
+       // if(introspectedTable.getFullyQualifiedTable().getAlias()!=null) sb.append(introspectedTable.getFullyQualifiedTable().getAlias());
         sb.append(" from ");
         sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));

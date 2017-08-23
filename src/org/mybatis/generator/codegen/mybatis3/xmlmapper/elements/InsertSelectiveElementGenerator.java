@@ -60,6 +60,7 @@ public class InsertSelectiveElementGenerator extends
                 if (gk.isJdbcStandard()) {
                     answer.addAttribute(new Attribute("useGeneratedKeys", "true")); //$NON-NLS-1$ //$NON-NLS-2$
                     answer.addAttribute(new Attribute("keyProperty", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+                    answer.addAttribute(new Attribute("keyColumn", introspectedColumn.getActualColumnName())); //$NON-NLS-1$
                 } else {
                     answer.addElement(getSelectKey(introspectedColumn, gk));
                 }
@@ -83,11 +84,16 @@ public class InsertSelectiveElementGenerator extends
         valuesTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
         valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addElement(valuesTrimElement);
-
+        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+            if (introspectedColumn.isIdentity()&&introspectedColumn.getActualColumnName().equalsIgnoreCase("ID")) {
+            	insertTrimElement.addElement(new TextElement("ID,"));
+            	valuesTrimElement.addElement(new TextElement(introspectedTable
+                        .getFullyQualifiedTableNameAtRuntime()+"_ID_SEQ.nextval"));
+            }
+        }
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getAllColumns()) {
             if (introspectedColumn.isIdentity()) {
-                // cannot set values on identity fields
                 continue;
             }
 
@@ -109,6 +115,7 @@ public class InsertSelectiveElementGenerator extends
                     .getParameterClause(introspectedColumn));
                 sb.append(',');
                 valuesTrimElement.addElement(new TextElement(sb.toString()));
+                
 
                 continue;
             }            
