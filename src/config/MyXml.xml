@@ -5,6 +5,7 @@
 <generatorConfiguration>
 <!-- 数据库驱动 -->
 	 <classPathEntry	location="libs/ojdbc6.jar"/>
+
 	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="flat" >
 		<property name="autoDelimitKeywords" value="true"/>
 		<property name="beginningDelimiter" value="&quot;"/>
