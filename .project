@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>PCCV2-JAVA-GENERATOR</name>
+=======
+	<name>BPF2-JAVA-GENERATOR</name>
+>>>>>>> c15f9581d50606827abcc4559b416c4b8e17780a
 	<comment></comment>
 	<projects>
 	</projects>

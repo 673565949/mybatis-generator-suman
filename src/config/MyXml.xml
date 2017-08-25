@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-confi1_0.dtd">
+<generatorConfiguration>
+<!-- 数据库驱动 -->
+	 <classPathEntry	location="libs/ojdbc6.jar"/>
+
+	<context id="DB2Tables"	targetRuntime="MyBatis3" defaultModelType="flat" >
+		<property name="autoDelimitKeywords" value="true"/>
+		<property name="beginningDelimiter" value="&quot;"/>
+		<property name="endingDelimiter" value="&quot;"/>
+		<property name="xmlMergeable" value="false"/>
+		<commentGenerator>
+			<property name="suppressDate" value="true"/>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true"/>
+		</commentGenerator>
+		<!--数据库链接URL，用户名、密码 -->
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="dbc:oracle:thin:@192.168.9.7:1521:ORCL" userId="BPF" password="BPF">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false"/>
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置-->
+		<javaModelGenerator targetPackage="com.viontech.model" targetProject="E:\公交客流项目\mybatis-generator">
+			<property name="enableSubPackages" value="true"/>
+			<property name="trimStrings" value="true"/>
+			<property name="rootClass" value="com.viontech.base.BaseModel"/>
+		</javaModelGenerator>
+		<!-- 生成映射文件的包名和位置-->
+		<sqlMapGenerator targetPackage="com.viontech.mapping" targetProject="E:\公交客流项目\mybatis-generator">
+			<property name="enableSubPackages" value="true"/>
+		</sqlMapGenerator>
+		<!-- 生成DAO的包名和位置-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.viontech.mapper" targetProject="E:\公交客流项目\mybatis-generator" >
+			<property name="enableSubPackages" value="true"/>
+			<property name="rootInterface" value="com.viontech.base.BaseMapper"/>
+		</javaClientGenerator>
+		<!-- 要生成哪些表-->
+
+		<table tableName="T_ARRIVALINFO" alias="arrivalInfo" domainObjectName="ArrivalInfo">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_ARRIVALTIME" alias="arrivalTime" domainObjectName="ArrivalTime">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_BUS" alias="bus" domainObjectName="Bus">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_BUS_SCHEDULE" alias="busSchedule" domainObjectName="BusSchedule">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_BUSROUTE" alias="busRoute" domainObjectName="BusRoute">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_BUSSTOP" alias="busStop" domainObjectName="BusStop">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_COUNTDATA" alias="countData" domainObjectName="CountData">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_DEVICE" alias="device" domainObjectName="Device">
+			<generatedKey column="DEVICE_NO" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_FUNC" alias="func" domainObjectName="Func">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_FUNC_ADMIN" alias="funcAdmin" domainObjectName="FuncAdmin">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_PROBEBASEDATA" alias="probebaseData" domainObjectName="ProbebaseData">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_REALTIMEDATA" alias="realtimeData" domainObjectName="RealtimeData">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_ROLE" alias="role" domainObjectName="Role">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_ROLE_AREA" alias="roleArea" domainObjectName="RoleArea">
+		</table>
+		<table tableName="T_ROLE_FUNC" alias="roleFunc" domainObjectName="RoleFunc">
+		</table>
+		<table tableName="T_ROLE_FUNC_ADMIN" alias="roleFuncAdmin" domainObjectName="RoleFuncAdmin">
+		</table>
+		<table tableName="T_ROUTETOBUS" alias="routeToBus" domainObjectName="RouteToBus">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_ROUTETOSTOP" alias="routeToStop" domainObjectName="RouteToStop">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_STOP_PASSENGER" alias="stopPassenger" domainObjectName="StopPassenger">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_USER" alias="s_user" domainObjectName="User">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_USER_ROLE" alias="userRole" domainObjectName="UserRole">
+		</table>
+		<table tableName="T_VA_INFO" alias="vaInfo" domainObjectName="VaInfo">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_VA_LINK" alias="vaLink" domainObjectName="VaLink">
+		</table>
+		<table tableName="T_VAS_INFO" alias="vasInfo" domainObjectName="VasInfo">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="T_VIDEOBASEDATA" alias="videoBaseData" domainObjectName="VideoBaseData">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		<table tableName="VT_VA" alias="va" domainObjectName="Va">
+		</table>
+		<table tableName="VT_VAS" alias="vas" domainObjectName="Vas">
+			<generatedKey column="ID" sqlStatement="JDBC"/>
+		</table>
+		
+		
+		
+		
+		
+	</context>
+	
+	
+</generatorConfiguration>
