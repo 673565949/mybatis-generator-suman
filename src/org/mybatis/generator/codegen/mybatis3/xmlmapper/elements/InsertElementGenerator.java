@@ -97,10 +97,12 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
         for (int i = 0; i < columns.size(); i++) {
             IntrospectedColumn introspectedColumn = columns.get(i);
             if (introspectedColumn.isIdentity()) {
-            	 insertClause.append(MyBatis3FormattingUtilities
+            	continue;
+            	/* insertClause.append(MyBatis3FormattingUtilities
                          .getEscapedColumnName(introspectedColumn));
                  valuesClause.append(introspectedTable
-                         .getFullyQualifiedTableNameAtRuntime()+"_ID_SEQ.nextval");
+                         .getFullyQualifiedTableNameAtRuntime()+"_ID_SEQ.nextval");*/
+                 
             }else{
             	 insertClause.append(MyBatis3FormattingUtilities
                          .getEscapedColumnName(introspectedColumn));

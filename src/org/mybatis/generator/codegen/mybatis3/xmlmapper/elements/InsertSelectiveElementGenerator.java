@@ -84,13 +84,13 @@ public class InsertSelectiveElementGenerator extends
         valuesTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
         valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addElement(valuesTrimElement);
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+     /*   for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
             if (introspectedColumn.isIdentity()&&introspectedColumn.getActualColumnName().equalsIgnoreCase("ID")) {
             	insertTrimElement.addElement(new TextElement("ID,"));
             	valuesTrimElement.addElement(new TextElement(introspectedTable
                         .getFullyQualifiedTableNameAtRuntime()+"_ID_SEQ.nextval"));
             }
-        }
+        }*/
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getAllColumns()) {
             if (introspectedColumn.isIdentity()) {
